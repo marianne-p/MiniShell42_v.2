@@ -26,7 +26,7 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-// # include "./Libft/libft.h"
+# include "../Libft_42/libft.h"
 
 typedef enum e_nodes
 {
@@ -38,8 +38,13 @@ typedef enum e_nodes
     OUT_REDIR_APPEND,
     COMMENT,
     COMMENT_APPEND,
-    FILE,
-	PIPE
+    FILE_STR,
+	PIPE,
+	STRING,
+	AND,
+	OR,
+	OPEN_BRACKET,
+	CLOSE_BRACKET
 }	t_node_type;
 
 typedef enum e_err
@@ -94,12 +99,15 @@ typedef struct s_string
 	t_node_type     type;
 	char            *string;
 	struct s_string *next;
+	struct s_string *prev;
 }	t_string;
 
 typedef struct s_ast
 {
 	t_node_type     type;
-	t_node          *node;
+	char            *string;
+	//t_node          *node;
+	struct s_ast    *top;
 	struct s_ast    *left;
 	struct s_ast    *right;
 }	t_ast;
@@ -112,18 +120,24 @@ typedef struct s_minish
 	//char			**envv;
 }	t_minish;
 
+
+/*Tokenize*/
+t_node_type	find_token_type(char *token);
+t_string	*tokenize(char *line);
+t_ast   *parse(t_string *tokens);
+
 /*Built-ins*/
-void	exec_builtin(t_node *node, t_minish **msh_ptr);
-int		exec_exit(t_node *node, t_minish **msh_ptr);
-void	ft_pwd(void);
-int		ft_cd(char *path);
-int		ft_echo(char **cmd);
-void	ft_exit(char *str, t_minish **msh_ptr, int ret, void *temp);
-int		ft_export(char **av, t_envv **head);
-void	print_all_envv(t_envv *head);
-void	free_envv(t_envv **node);
-void	ft_addenvv(t_envv **env_ptr, char *sngl, t_envv *new);
-int		ft_unset(char *key, t_envv **head);
-void	ft_env(t_minish *minish);
+// void	exec_builtin(t_node *node, t_minish **msh_ptr);
+// int		exec_exit(t_node *node, t_minish **msh_ptr);
+// void	ft_pwd(void);
+// int		ft_cd(char *path);
+// int		ft_echo(char **cmd);
+// void	ft_exit(char *str, t_minish **msh_ptr, int ret, void *temp);
+// int		ft_export(char **av, t_envv **head);
+// void	print_all_envv(t_envv *head);
+// void	free_envv(t_envv **node);
+// void	ft_addenvv(t_envv **env_ptr, char *sngl, t_envv *new);
+// int		ft_unset(char *key, t_envv **head);
+// void	ft_env(t_minish *minish);
 
 #endif

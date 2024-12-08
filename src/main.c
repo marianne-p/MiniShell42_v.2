@@ -1,24 +1,16 @@
-#include "../minishell.h"
+#include "../include/minishell.h"
 
-t_string    *tokenize(char *line)
+void   free_ast(t_ast **leaf)
 {
-    t_string    *tokens;
-    t_string    *new;
-    char        *token;
-
-    tokens = NULL;
-    token = ft_split(line, " ");
-    while (token)
-    {
-        new = (t_string *)malloc(sizeof(t_string));
-        if (!new)
-            return (NULL);
-        new->string = ft_strdup(token);
-        new->next = tokens;
-        tokens = new;
-        token = strtok(NULL, " ");
-    }
-    return (tokens);
+    if (!*leaf)
+        return ;
+    if ((*leaf)->left)
+        free_ast(&((*leaf)->left));
+    if ((*leaf)->right)
+        free_ast(&((*leaf)->right));
+    free(&((*leaf)->string));
+    free(*leaf);
+    *leaf = NULL;
 }
 
 void    msh_loop(t_minish *msh)
@@ -37,7 +29,8 @@ void    msh_loop(t_minish *msh)
             add_history(line);
             msh->tokens = tokenize(line);
             msh->leaf = parse(msh->tokens);
-            exec_ast(msh->leaf, msh);
+            // exec_ast(msh->leaf, msh);
+            free_ast(&(msh->leaf));
         }
         free(line);
     }
@@ -53,5 +46,6 @@ int main(void)
     msh->tokens = NULL;
     msh->leaf = NULL;
     msh_loop(msh);
+    free(msh);
     return (0);
 }
