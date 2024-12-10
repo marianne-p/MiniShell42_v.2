@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:15:16 by ogrativ           #+#    #+#             */
-/*   Updated: 2024/12/10 13:48:51 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/10 16:45:40 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,17 @@ int	ft_set_env(t_list **lst, char	*env)
 		return (-1);
 	while (tmp[i] != NULL)
 	{
-		var = parce_env(tmp[i]);
+		var = parce_env(tmp[i++]);
 		if (var == NULL)
-			return (-1);
-		if (!try_replace(lst, var))
-			ft_lstadd_back(lst, ft_lstnew(var));
-		i++;
+			continue ;
+			// return (-1);
+		if (try_replace(lst, var) == 0)
+		{
+			if (*lst == NULL)
+				*lst = ft_lstnew(var);
+			else
+				ft_lstadd_back(lst, ft_lstnew(var));
+		}
 	}
-	free_split(tmp);
-	return (0);
+	return (ft_free_2d_array(tmp, i), 0);
 }
