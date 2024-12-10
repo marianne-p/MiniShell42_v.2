@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2024/12/10 13:48:30 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/10 16:57:37 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "../Libft_42/libft.h"
+# include <linux/limits.h>
+# include <errno.h>
+# include <string.h>
+# include "../ft_libft/headers/libft.h"
 
 typedef enum e_nodes
 {
