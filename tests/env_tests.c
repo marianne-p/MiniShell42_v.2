@@ -6,26 +6,13 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:35:46 by ogrativ           #+#    #+#             */
-/*   Updated: 2024/12/10 16:45:00 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/11 12:08:51 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include "ft_color_utils.h"
 #include <stdbool.h>
-
-void	free_split(char **str)
-{
-	char	**tmp;
-
-	tmp = str;
-	while (tmp && *tmp)
-	{
-		free(*tmp);
-		tmp++;
-	}
-	free(str);
-}
 
 bool	ft_lst_nodecmp(t_list *node1, t_list *node2)
 {
@@ -120,9 +107,6 @@ int	main(void)
 		printf("mix input: " GRN "OK\n" RESET);
 	else
 		printf("mix input: " RED "KO\n" RESET);
-	print_env_list(lst5);
-	printf("\nlst\n\n");
-	print_env_list(lst);
 	ft_clear(&lst5, env5);
 	ft_clear(&lst, env);
 	return (0);
