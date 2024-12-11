@@ -8,7 +8,7 @@ void   free_ast(t_ast **leaf)
         free_ast(&((*leaf)->left));
     if ((*leaf)->right)
         free_ast(&((*leaf)->right));
-    free(&((*leaf)->string));
+    free((*leaf)->string);
     free(*leaf);
     *leaf = NULL;
 }

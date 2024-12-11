@@ -15,10 +15,10 @@ SRC_DIR	:= src
 SRC	:= main.c token.c parser.c
 OBJ_DIR	:= obj
 CFLAGS	:= -Wall -Wextra -Werror -g -I./include
-LIBFT_DIR	:= ./Libft_42
+LIBFT_DIR	:= ./ft_libft
 OBJ	:= $(SRC:%.c=$(OBJ_DIR)/%.o)
-LIBFT	:= $(LIBFT_DIR)/libft.a
-LIB	:= -lreadline -I$(LIBFT_DIR) -L$(LIBFT_DIR) -lft
+LIBFT	:= $(LIBFT_DIR)/libft_ft.a
+LIB	:= -lreadline -I$(LIBFT_DIR) -L$(LIBFT_DIR) -lft_ft
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
