@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2024/12/13 11:46:20 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/13 15:57:19 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,15 @@ void		free_split(char **str);
 * @return Return 0 if succes, -1 for error
 */
 int			printpwd(void);
+
+/**
+ * @brief Changes the current working directory
+ * of the calling process to the directory specified in path
+ * @param path Path to directory
+ * @param user User enviroment variable
+ * @return On succes return 0, on error -1
+ */
+int			ft_cd(char *path, t_env *user);
 
 // Enviroment variables
 
