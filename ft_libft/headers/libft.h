@@ -59,6 +59,10 @@ Check if c is printable
 */
 int		ft_isprint(int c);
 /*
+Check whether c is space, tab, white space... 
+*/
+int	ft_isblank(int c);
+/*
 Convert all letters from lowercase to uppercase
 */
 int		ft_toupper(int c);

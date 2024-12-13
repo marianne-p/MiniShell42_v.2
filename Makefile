@@ -12,7 +12,7 @@
 
 NAME	:= minishell
 SRC_DIR	:= src
-SRC	:= main.c token.c parser.c
+SRC	:= main.c token.c bonus_parser.c token_split_logical.c
 OBJ_DIR	:= obj
 CFLAGS	:= -Wall -Wextra -Werror -g -I./include
 LIBFT_DIR	:= ./ft_libft
