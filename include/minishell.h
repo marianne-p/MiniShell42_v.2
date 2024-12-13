@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2024/12/10 16:57:37 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/13 11:46:20 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,16 @@ t_list		*ft_get_env_node(t_list *lst, char *key);
  * @param lst List of enviroment variables
  */
 void		print_env_list(t_list *lst);
+
+/**
+ * @brief Splits the value of an environment variable into parts
+ * using a specified delimiter.
+ * @param lst List of environment variables.
+ * @param key Name of the environment variable to split.
+ * @param c Delimiter character used for splitting.
+ * @return Array of strings resulting from the split operation.
+ */
+char		**split_path(t_list *lst, char *key, char c);
 
 /**
  * @brief Free allocate memory
