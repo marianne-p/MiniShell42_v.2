@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2024/12/13 15:57:19 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/14 15:58:10 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ t_string	*split_logical(char *line, int i, t_string *new);
  * Frees (char *)string AND linked list (t_string *)tokens
  * @param tokens - head of double linked list 
  */
-void    free_tokens(t_string *tokens);
+void		free_tokens(t_string *tokens);
 // t_ast		*parse(t_string *tokens);
 // void		free_split(char **str);
 
@@ -164,7 +164,7 @@ int			printpwd(void);
  * @param user User enviroment variable
  * @return On succes return 0, on error -1
  */
-int			ft_cd(char *path, t_env *user);
+int			ft_cd(char *path, t_list **lst);
 
 // Enviroment variables
 
