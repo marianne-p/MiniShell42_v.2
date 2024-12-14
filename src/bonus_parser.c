@@ -151,7 +151,7 @@ t_ast    *find_heart(t_string *start, t_string *end, t_ast *left, t_ast *right)
 // 	return (NULL);
 // }
 
-t_ast   *parse(t_string *tokens)
+t_ast   *parse_advanced(t_string *tokens)
 {
 	t_ast   *ast;
 	t_ast   *heart;

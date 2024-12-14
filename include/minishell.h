@@ -34,6 +34,7 @@
 typedef enum e_nodes
 {
 	CMD,
+	CMD_LINE,
 	CUST_CMD,
 	IN_REDIR,
 	HERE_DOC,
@@ -124,11 +125,31 @@ typedef struct s_minish
 
 
 /*Tokenize*/
-t_node_type	find_token_type(char *token);
+/**
+ * @brief Creates double linked list of tokens
+ * @param line input line from readline
+ * @return 
+ */
 t_string	*tokenize(char *line);
-t_ast		*parse(t_string *tokens);
 
-void		free_split(char **str);
+/**
+ * @brief Splits the line into tokens which 
+ * influence the tree logic, including |, ||, &&, ()
+ * @param line Input line
+ * @param start pointer to start
+ * @param i - 0
+ * @param new allocated t_string
+ * @return Head of the linked list, or NULL
+ */
+t_string	*split_logical(char *line, int i, t_string *new);
+
+/**
+ * Frees (char *)string AND linked list (t_string *)tokens
+ * @param tokens - head of double linked list 
+ */
+void    free_tokens(t_string *tokens);
+// t_ast		*parse(t_string *tokens);
+// void		free_split(char **str);
 
 /**
 * @brief Printing path of current working directory

@@ -28,9 +28,10 @@ void    msh_loop(t_minish *msh)
         {
             add_history(line);
             msh->tokens = tokenize(line);
-            msh->leaf = parse(msh->tokens);
+			free_tokens(msh->tokens);
+            // msh->leaf = parse(msh->tokens);
             // exec_ast(msh->leaf, msh);
-            free_ast(&(msh->leaf));
+            // free_ast(&(msh->leaf));
         }
         free(line);
     }

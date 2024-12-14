@@ -20,3 +20,10 @@ int	ft_issign(int c)
 	}
 	return (0);
 }
+
+int	ft_isblank(int c)
+{
+	if ((c > 8 && c < 14) || c == ' ')
+		return (1);
+	return (0);
+}
