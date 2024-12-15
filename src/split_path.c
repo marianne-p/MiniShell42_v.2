@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_issign.c                                        :+:      :+:    :+:   */
+/*   split_path.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogrativ <ogrativ@student.42london.com      +#+  +:+       +#+        */
+/*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 12:33:23 by ogrativ           #+#    #+#             */
-/*   Updated: 2024/07/02 12:33:36 by ogrativ          ###   ########.fr       */
+/*   Created: 2024/12/11 14:41:32 by ogrativ           #+#    #+#             */
+/*   Updated: 2024/12/11 15:01:41 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/libft.h"
+#include "../include/minishell.h"
 
-int	ft_issign(int c)
+char	**split_path(t_list *lst, char *key, char c)
 {
-	if (c == '-' || c == '+')
-	{
-		return (1);
-	}
-	return (0);
-}
+	t_env	*env;
 
-int	ft_isblank(int c)
-{
-	if ((c > 8 && c < 14) || c == ' ')
-		return (1);
-	return (0);
+	env = ft_get_env(lst, key);
+	if (env == NULL)
+		return (NULL);
+	return (ft_split(env->value, c));
 }

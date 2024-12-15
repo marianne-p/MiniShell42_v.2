@@ -137,7 +137,21 @@ t_ast    *find_heart(t_string *start, t_string *end, t_ast *left, t_ast *right)
 	}
 }
 
-t_ast   *parse(t_string *tokens)
+// t_ast   *find_left_leaf(t_string *tokens)
+// {
+// 	t_string    *tmp;
+
+// 	tmp = tokens;
+// 	if (!tokens)
+// 		return (NULL);
+// 	if (tmp->prev->type == STRING)
+// 		return (create_leaf(tmp->prev, NULL, NULL, NULL));
+// 	else if (tmp->prev->type == CLOSE_BRACKET)
+	
+// 	return (NULL);
+// }
+
+t_ast   *parse_advanced(t_string *tokens)
 {
 	t_ast   *ast;
 	t_ast   *heart;

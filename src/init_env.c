@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:19:18 by ogrativ           #+#    #+#             */
-/*   Updated: 2024/12/10 16:44:15 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/13 13:23:42 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ t_env	*parce_env(char *env)
 	if (var->key == NULL)
 		return (free(var), NULL);
 	var->value = ft_substr(env, ++i, ft_strlen(env));
-	if (var->value == NULL || var->value[0] == '\0')
-		return (free(var->key), free(var->value), free(var), NULL);
+	if (var->value == NULL)
+		return (free(var->key), free(var), NULL);
 	return (var);
 }
 
@@ -55,14 +55,13 @@ int	init_env(t_list **lst, char *env[])
 		return (perror(strerror(EINVAL)), -1);
 	while (env[i] != NULL)
 	{
-		var = parce_env(env[i]);
+		var = parce_env(env[i++]);
 		if (var == NULL)
-			continue ;
+			return (ft_lstclear(lst, free_env), -1);
 		else if (*lst == NULL)
 			*lst = ft_lstnew(var);
 		else
 			ft_lstadd_back(lst, ft_lstnew(var));
-		i++;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2024/12/10 16:57:37 by ogrativ          ###   ########.fr       */
+/*   Updated: 2024/12/14 15:58:10 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 typedef enum e_nodes
 {
 	CMD,
+	CMD_LINE,
 	CUST_CMD,
 	IN_REDIR,
 	HERE_DOC,
@@ -124,17 +125,46 @@ typedef struct s_minish
 
 
 /*Tokenize*/
-t_node_type	find_token_type(char *token);
+/**
+ * @brief Creates double linked list of tokens
+ * @param line input line from readline
+ * @return 
+ */
 t_string	*tokenize(char *line);
-t_ast		*parse(t_string *tokens);
 
-void		free_split(char **str);
+/**
+ * @brief Splits the line into tokens which 
+ * influence the tree logic, including |, ||, &&, ()
+ * @param line Input line
+ * @param start pointer to start
+ * @param i - 0
+ * @param new allocated t_string
+ * @return Head of the linked list, or NULL
+ */
+t_string	*split_logical(char *line, int i, t_string *new);
+
+/**
+ * Frees (char *)string AND linked list (t_string *)tokens
+ * @param tokens - head of double linked list 
+ */
+void		free_tokens(t_string *tokens);
+// t_ast		*parse(t_string *tokens);
+// void		free_split(char **str);
 
 /**
 * @brief Printing path of current working directory
 * @return Return 0 if succes, -1 for error
 */
 int			printpwd(void);
+
+/**
+ * @brief Changes the current working directory
+ * of the calling process to the directory specified in path
+ * @param path Path to directory
+ * @param user User enviroment variable
+ * @return On succes return 0, on error -1
+ */
+int			ft_cd(char *path, t_list **lst);
 
 // Enviroment variables
 
@@ -188,6 +218,16 @@ t_list		*ft_get_env_node(t_list *lst, char *key);
  * @param lst List of enviroment variables
  */
 void		print_env_list(t_list *lst);
+
+/**
+ * @brief Splits the value of an environment variable into parts
+ * using a specified delimiter.
+ * @param lst List of environment variables.
+ * @param key Name of the environment variable to split.
+ * @param c Delimiter character used for splitting.
+ * @return Array of strings resulting from the split operation.
+ */
+char		**split_path(t_list *lst, char *key, char c);
 
 /**
  * @brief Free allocate memory
