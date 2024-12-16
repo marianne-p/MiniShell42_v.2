@@ -141,7 +141,7 @@ t_string	*tokenize(char *line);
  * @param new allocated t_string
  * @return Head of the linked list, or NULL
  */
-t_string	*split_logical(char *line, int i, t_string *new);
+t_string	*split_logical(char **line, t_string *new);
 
 /**
  * Frees (char *)string AND linked list (t_string *)tokens

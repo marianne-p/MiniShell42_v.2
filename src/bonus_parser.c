@@ -3,8 +3,10 @@
 void    free_tokens(t_string *tokens)
 {
 	t_string    *tmp;
+	t_string	*start;
 
-	while (tokens)
+	start = tokens;
+	while (tokens != start)
 	{
 		tmp = tokens;
 		tokens = tokens->next;
