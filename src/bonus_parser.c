@@ -3,8 +3,10 @@
 void    free_tokens(t_string *tokens)
 {
 	t_string    *tmp;
+	t_string	*start;
 
-	while (tokens)
+	start = tokens;
+	while (tokens != start)
 	{
 		tmp = tokens;
 		tokens = tokens->next;
@@ -110,7 +112,7 @@ t_ast    *find_heart(t_string *start, t_string *end, t_ast *left, t_ast *right)
 		right = find_heart(tmp->next, end->prev, NULL, NULL);
 		tmp = count_brackets(start, OPEN_BRACKET, CLOSE_BRACKET, false);
 		left = find_heart(start->next, tmp->prev, NULL, NULL);
-		printf("End: %s\n", end->string);
+		// printf("End: %s\n", end->string);
 		tmp = count_brackets(start, OPEN_BRACKET, CLOSE_BRACKET, true);
 		return(create_leaf(tmp, NULL, left, right));
 	}
@@ -119,7 +121,7 @@ t_ast    *find_heart(t_string *start, t_string *end, t_ast *left, t_ast *right)
 		right = create_leaf(end, NULL, NULL, NULL);
 		tmp = count_brackets(start, OPEN_BRACKET, CLOSE_BRACKET, false);
 		left = find_heart(start->next, tmp->prev, NULL, NULL);
-		printf("End: %s\n", end->string);
+		// printf("End: %s\n", end->string);
 		return (create_leaf(end->prev, NULL, left, right));
 	}
 	else if (end->type == CLOSE_BRACKET && start->type == STRING)
@@ -127,7 +129,7 @@ t_ast    *find_heart(t_string *start, t_string *end, t_ast *left, t_ast *right)
 		tmp = count_brackets(end, CLOSE_BRACKET, OPEN_BRACKET, false);
 		right = find_heart(tmp->next, end->prev, NULL, NULL);
 		left = create_leaf(start, NULL, NULL, NULL);
-		printf("Start: %s\n", start->string);
+		// printf("Start: %s\n", start->string);
 		return (create_leaf(start->next, NULL, left, right));
 	}
 	else
@@ -165,7 +167,6 @@ t_ast   *parse_advanced(t_string *tokens)
 	if (tokens->type == OPEN_BRACKET)
 	{
 		heart = find_heart(tokens->next, tokens->prev->prev, NULL, NULL);
-		//ast = create_leaf(heart, ast, find_left_leaf(heart), find_right_leaf(heart));
 		return (heart);
 	}
 	else if (tokens->type == STRING)

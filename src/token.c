@@ -28,11 +28,10 @@ t_string    *tokenize(char *line)
         new = (t_string *)malloc(sizeof(t_string));
         if (!new)
             return (NULL);
-		new = NULL;
-		new = split_logical(line_cpy, 0, new);	
+		new = split_logical(&line_cpy, new);	
         // new->type = find_token_type(*token_str);
         // new->string = ft_strdup(*token_str);
-        if (!*(line + 1))
+        if (!*line_cpy)
         {
             start->prev = new;
             new->next = start;
@@ -44,7 +43,7 @@ t_string    *tokenize(char *line)
         if (!start)
             start = new;
 	}
-	free(line_cpy);
+	free(line_start);
     // free_split(tmp_str);
     return (start);
 }
