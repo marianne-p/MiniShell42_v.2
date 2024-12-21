@@ -34,8 +34,7 @@
 typedef enum e_nodes
 {
 	CMD,
-	CMD_LINE,
-	CUST_CMD,
+	CMD_CUST,
 	IN_REDIR,
 	HERE_DOC,
 	OUT_REDIR,
@@ -44,11 +43,11 @@ typedef enum e_nodes
 	COMMENT_APPEND,
 	FILE_STR,
 	PIPE,
-	STRING,
 	AND,
 	OR,
 	OPEN_BRACKET,
-	CLOSE_BRACKET
+	CLOSE_BRACKET,
+	STRING
 }	t_node_type;
 
 typedef enum e_err
@@ -63,21 +62,6 @@ typedef struct s_env
 	char	*value;
 }	t_env;
 
-/* 
-*   type - CMD | CUST_CMD
-*   argv - command and arguments
-*   full_path - exec path like "/bin/ls"
-*/
-typedef struct s_cmd
-{
-	t_node_type	type;
-	char		**argv;
-	int			argc; //?
-	char		*full_path;
-	int			outfd;
-	int			infd;
-}	t_cmd;
-
 /*
 * args[0] = File path for redirection,
 * args[1] = delim or NULL
@@ -86,16 +70,24 @@ typedef struct s_redir
 {
 	t_node_type		type;
 	char			**args;
-	int				fd; //?
+	int				fd;
 	struct s_redir	*next;
 }	t_redir;
 
-typedef struct s_node
+/* 
+*   type - CMD | CUST_CMD
+*   argv - command and arguments
+*   full_path - exec path like "/bin/ls"
+*/
+typedef struct s_cmd
 {
-	t_cmd			*cmd;
-	t_redir			*redir;
-	struct s_node	*next;
-}	t_node;
+	t_node_type		type;
+	char			**argv;
+	int				argc; //?
+	char			*full_path;
+	struct s_redir	inred;
+	struct s_redir	outred;
+}	t_cmd;
 
 typedef struct s_string
 {
@@ -109,7 +101,8 @@ typedef struct s_ast
 {
 	t_node_type		type;
 	char			*string;
-	//t_node          *node;
+	t_cmd			*cmd;
+	bool			result;
 	struct s_ast	*top;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -136,12 +129,17 @@ t_string	*tokenize(char *line);
  * @brief Splits the line into tokens which 
  * influence the tree logic, including |, ||, &&, ()
  * @param line Input line
- * @param start pointer to start
- * @param i - 0
  * @param new allocated t_string
  * @return Head of the linked list, or NULL
  */
 t_string	*split_logical(char **line, t_string *new);
+
+/**
+ * @brief Creates a cmd_node inside t_string of type CMD,
+ * 		which prerares command for execution: splits redir, cmd, args 
+ * 		and checks their validity
+ *  
+ */
 
 /**
  * Frees (char *)string AND linked list (t_string *)tokens
