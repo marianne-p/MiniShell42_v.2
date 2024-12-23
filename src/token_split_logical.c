@@ -166,7 +166,7 @@ t_string	*create_string_struct(char **line, t_string *new)
 	}
 	else if (*line && **line && **line == '"')
 	{
-		new->string = copy_quote(&(new->string), '"', NULL);
+		new->string = copy_quote(line, '"', NULL);
 		new->type = COMMENT_APPEND;
 	}
 	else if (*line && **line && !ft_strncmp(*line, "<<", 2))

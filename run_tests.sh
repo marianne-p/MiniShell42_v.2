@@ -8,14 +8,31 @@ GREEN="\033[32m"
 RED="\033[31m"
 RESET="\033[0m"
 
-# Array of test commands
+# Initialize counters
+PASS_COUNT=0
+FAIL_COUNT=0
+
 TEST_COMMANDS=(
-  "ls"
-  "ls | ls"
-  "echo Hello World!"
-  "cat src/main.c"
-  "echo test && echo another" 
-  "ls -a <<infile | cat && echo 'cool'"
+  "" # 1. Empty input
+  "ls" # 2. Single command
+  "ls|ls" # 3. Pipe with no space
+  "ls | ls" # 4. Pipe with space
+  "   echo 'leading spaces test'" # 5. Spaces before command
+  "echo 'trailing spaces test'   " # 6. Trailing spaces
+  "echo     too     many     spaces" # 7. Multiple spaces between tokens
+  "(echo 'no space between tokens')" # 8. Parentheses with no space
+  "( echo spaced )" # 9. Parentheses with space
+  "echo first && echo second" # 10. Logical AND
+  "false || echo 'ran after false'" # 11. Logical OR
+  "echo start && false || echo 'fallback'" # 12. Mixed && and ||
+  "ls>out.txt" # 13. Redirection with no space
+  "ls > out.txt" # 14. Redirection with space
+  "echo 'appending'>>out.txt" # 15. Append redirection no space
+  "echo 'appending with space' >> out.txt" # 16. Append redirection with space
+  "cat <<EOF | grep hello && echo 'Done'" # 17. Here_doc combined with pipe
+  "echo \"quoted #comment\" | cat" # 18. Quotes and comments
+  "echo '&&' && echo '||'" # 19. Single quotes around logical operators
+  "ls | grep src | wc -l" # 20. Multiple pipes in one line
 )
 
 # Print header
@@ -74,9 +91,15 @@ for CMD in "${TEST_COMMANDS[@]}"; do
   if [ "$IS_RED" -eq 1 ]; then
     echo -e "${RED}Full Valgrind output (since there's a potential issue):${RESET}"
     echo "$VALGRIND_OUTPUT"
+    ((FAIL_COUNT++))
+  else
+    ((PASS_COUNT++))
   fi
 
 done
 
+# Print summary
 echo
 echo "All tests completed!"
+echo -e "Passed: ${GREEN}$PASS_COUNT${RESET}"
+echo -e "Failed: ${RED}$FAIL_COUNT${RESET}"
