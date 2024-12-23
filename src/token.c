@@ -60,7 +60,7 @@ t_string	*tokenize_oneline(void)
 		return (NULL);
 	while ((line = get_next_line(STDIN_FILENO)) != NULL)
 	{
-		printf("line = '%s'\n", line);
+		// printf("line = '%s'\n", line);
 		temp = final_str;
 		final_str = ft_strjoin(temp, line);
 		free(temp);
@@ -68,7 +68,7 @@ t_string	*tokenize_oneline(void)
 		if (!final_str)
 			return (NULL);
 	}
-	printf("Final_str is '%s'\n", final_str);
+	// printf("Final_str is '%s'\n", final_str);
 	start = tokenize(final_str);
 	free(final_str);
 	return (start);

@@ -33,6 +33,7 @@ TEST_COMMANDS=(
   "echo \"quoted #comment\" | cat" # 18. Quotes and comments
   "echo '&&' && echo '||'" # 19. Single quotes around logical operators
   "ls | grep src | wc -l" # 20. Multiple pipes in one line
+  "(echo << here_doc|cat&&ls)" # 21. Multiple operators without spaces ( (, |, &&, ) )
 )
 
 # Print header
@@ -40,10 +41,11 @@ echo "=========================="
 echo "      Minishell Tests     "
 echo "=========================="
 
+i=1
+
 for CMD in "${TEST_COMMANDS[@]}"; do
   echo
-  echo "--------------------------"
-  echo "Test Command: $CMD"
+  echo "Test $i, Command: $CMD"
   echo "--------------------------"
 
   #
@@ -95,7 +97,7 @@ for CMD in "${TEST_COMMANDS[@]}"; do
   else
     ((PASS_COUNT++))
   fi
-
+  ((i++))
 done
 
 # Print summary

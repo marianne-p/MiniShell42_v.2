@@ -12,13 +12,13 @@ void    free_tokens(t_string *tokens)
 		{
 			tmp = tokens;
 			tokens = tmp->next;
-			fprintf(stderr, "Deleting '%s'\n", tmp->string);
+			// fprintf(stderr, "Deleting '%s'\n", tmp->string);
 			free(tmp->string);
 			free(tmp);
 			tmp = NULL;
 			if (tokens == start)
 			{
-				fprintf(stderr, "Deleting start '%s'\n", start->string);
+				// fprintf(stderr, "Deleting start '%s'\n", start->string);
 				free (start->string);
 				free (start);
 				break ;
