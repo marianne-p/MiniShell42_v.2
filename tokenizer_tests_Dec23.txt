@@ -1,0 +1,154 @@
+==========================
+      Minishell Tests     
+==========================
+
+Test 1, Command: 
+--------------------------
+Result:
+ (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758192==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758192== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 2, Command: ls
+--------------------------
+Result:
+ls (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758208==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758208== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 3, Command: ls|ls
+--------------------------
+Result:
+ls (COMMENT_APPEND) -> | (PIPE) -> ls (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758224==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758224== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 4, Command: ls | ls
+--------------------------
+Result:
+ls (COMMENT_APPEND) -> | (PIPE) -> ls (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758240==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758240== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 5, Command:    echo 'leading spaces test'
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> leading spaces test (COMMENT)
+Valgrind (definitely lost): [32m==1758256==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758256== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 6, Command: echo 'trailing spaces test'   
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> trailing spaces test (COMMENT)
+Valgrind (definitely lost): [32m==1758272==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758272== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 7, Command: echo     too     many     spaces
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> too (COMMENT_APPEND) -> many (COMMENT_APPEND) -> spaces (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758289==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758289== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 8, Command: (echo 'no space between tokens')
+--------------------------
+Result:
+( (OPEN_BRACKET) -> echo (COMMENT_APPEND) -> no space between tokens (COMMENT) -> ) (CLOSE_BRACKET)
+Valgrind (definitely lost): [32m==1758305==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758305== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 9, Command: ( echo spaced )
+--------------------------
+Result:
+( (OPEN_BRACKET) -> echo (COMMENT_APPEND) -> spaced (COMMENT_APPEND) -> ) (CLOSE_BRACKET)
+Valgrind (definitely lost): [32m==1758321==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758321== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 10, Command: echo first && echo second
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> first (COMMENT_APPEND) -> && (AND) -> echo (COMMENT_APPEND) -> second (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758337==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758337== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 11, Command: false || echo 'ran after false'
+--------------------------
+Result:
+false (COMMENT_APPEND) -> || (OR) -> echo (COMMENT_APPEND) -> ran after false (COMMENT)
+Valgrind (definitely lost): [32m==1758355==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758355== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 12, Command: echo start && false || echo 'fallback'
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> start (COMMENT_APPEND) -> && (AND) -> false (COMMENT_APPEND) -> || (OR) -> echo (COMMENT_APPEND) -> fallback (COMMENT)
+Valgrind (definitely lost): [32m==1758371==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758371== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 13, Command: ls>out.txt
+--------------------------
+Result:
+ls>out.txt (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758387==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758387== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 14, Command: ls > out.txt
+--------------------------
+Result:
+ls (COMMENT_APPEND) -> > (OUT_REDIR) -> out.txt (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758403==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758403== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 15, Command: echo 'appending'>>out.txt
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> appending (COMMENT) -> >> (OUT_REDIR_APPEND) -> out.txt (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758419==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758419== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 16, Command: echo 'appending with space' >> out.txt
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> appending with space (COMMENT) -> >> (OUT_REDIR_APPEND) -> out.txt (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758435==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758435== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 17, Command: cat <<EOF | grep hello && echo 'Done'
+--------------------------
+Result:
+cat (COMMENT_APPEND) -> << (HERE_DOC) -> EOF (COMMENT_APPEND) -> | (PIPE) -> grep (COMMENT_APPEND) -> hello (COMMENT_APPEND) -> && (AND) -> echo (COMMENT_APPEND) -> Done (COMMENT)
+Valgrind (definitely lost): [32m==1758451==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758451== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 18, Command: echo "quoted #comment" | cat
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> quoted #comment (COMMENT_APPEND) -> | (PIPE) -> cat (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758468==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758468== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 19, Command: echo '&&' && echo '||'
+--------------------------
+Result:
+echo (COMMENT_APPEND) -> && (COMMENT) -> && (AND) -> echo (COMMENT_APPEND) -> || (COMMENT)
+Valgrind (definitely lost): [32m==1758484==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758484== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 20, Command: ls | grep src | wc -l
+--------------------------
+Result:
+ls (COMMENT_APPEND) -> | (PIPE) -> grep (COMMENT_APPEND) -> src (COMMENT_APPEND) -> | (PIPE) -> wc (COMMENT_APPEND) -> -l (COMMENT_APPEND)
+Valgrind (definitely lost): [32m==1758500==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758500== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+Test 21, Command: (echo << here_doc|cat&&ls)
+--------------------------
+Result:
+( (OPEN_BRACKET) -> echo (COMMENT_APPEND) -> << (HERE_DOC) -> here_doc (COMMENT_APPEND) -> | (PIPE) -> cat (COMMENT_APPEND) -> && (AND) -> ls (COMMENT_APPEND) -> ) (CLOSE_BRACKET)
+Valgrind (definitely lost): [32m==1758516==    definitely lost: 0 bytes in 0 blocks[0m
+Valgrind (error summary):   [32m==1758516== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)[0m
+
+All tests completed!
+Passed: [32m21[0m
+Failed: [31m0[0m
