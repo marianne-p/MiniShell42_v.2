@@ -29,8 +29,12 @@ t_string    *tokenize(char *line)
         if (!new)
             return (NULL);
 		new = split_logical(&line_cpy, new);	
-        // new->type = find_token_type(*token_str);
-        // new->string = ft_strdup(*token_str);
+		if (new->string == NULL)
+		{
+			free (new);
+			new = NULL;
+			continue ;
+		}
         if (!*line_cpy && start)
         {
 			start->prev = new;
@@ -42,6 +46,9 @@ t_string    *tokenize(char *line)
         tmp = new;
         if (!start)
             start = new;
+		if (new->prev && new->prev->type == HERE_DOC)
+			new->type = COMMENT;
+
 	}
 	free(line_start);
     // free_split(tmp_str);

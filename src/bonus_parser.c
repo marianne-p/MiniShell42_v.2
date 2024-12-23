@@ -5,7 +5,7 @@ void    free_tokens(t_string *tokens)
 	t_string    *tmp;
 	t_string	*start;
 
-	if (tokens->prev != NULL)
+	if (tokens && tokens->prev != NULL)
 	{
 		start = tokens->prev;
 		while (tokens)
@@ -25,7 +25,7 @@ void    free_tokens(t_string *tokens)
 			}
 		}
 	}
-	else
+	else if (tokens)
 	{
 		free(tokens->string);
 		free(tokens);

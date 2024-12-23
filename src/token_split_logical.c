@@ -48,6 +48,11 @@ char	*copy_quote(char **line_start, char quote, char *str)
 	i = 1;
 	while (*line_start && (*line_start)[i] && (*line_start)[i] != quote)
 		i++;
+	if (i == 1)
+	{
+		*line_start = *line_start + 2;
+		return (NULL);
+	}
 	str = malloc(i);
 	if (str == NULL)
 		return (NULL);
@@ -71,13 +76,21 @@ char	*copy_token(char **line, char *str)
 	i = 0;
 	if (ft_isblank(**line))
 		skip_blanks(line);	
-	while (*line && (*line)[i] && !ft_isblank((*line)[i]))
+	while (*line && (*line)[i] && !ft_isblank((*line)[i])
+			&& (*line)[i] != '\'' && (*line)[i] != '"'
+			&& (*line)[i] != '|' && (*line)[i] !='(' 
+			&& (*line)[i] != '&' && (*line)[i] != ')'
+			&& (*line)[i] != '\0')
 		i++;
 	str = malloc(i + 1);
 	if (str == NULL)
 		return (NULL);
 	i = 0;
-	while (*line && **line && !ft_isblank(**line))
+	while (*line && **line && !ft_isblank(**line)
+			&& (**line) != '\'' && (**line) != '"'
+			&& (**line) != '|' && (**line) !='(' 
+			&& (**line) != '&' && (**line) != ')'
+			&& (**line) != '\0')
 	{
 		str[i++] = **line;
 		(*line)++;
@@ -141,13 +154,15 @@ t_string	*create_outred_struct(char **line, t_string *new)
 {
 	if (*line && !ft_strncmp(*line, ">>", 2))
 	{
-		new->string = copy_token(line, NULL);
-		new->type = OUT_REDIR_APPEND; 
+		new->string = ft_strdup(">>\0");
+		new->type = OUT_REDIR_APPEND;
+		*line = *line + 2; 
 	}
 	else if (*line && **line && **line == '>')
 	{
-		new->string = copy_token(line, NULL);
+		new->string = ft_strdup(">\0");
 		new->type = OUT_REDIR;
+		*line = *line + 1;
 	}
 	else
 	{
@@ -171,13 +186,15 @@ t_string	*create_string_struct(char **line, t_string *new)
 	}
 	else if (*line && **line && !ft_strncmp(*line, "<<", 2))
 	{
-		new->string = copy_token(line, NULL);
+		new->string = ft_strdup("<<\0");
 		new->type = HERE_DOC;
+		*line = *line + 2;
 	}
 	else if (*line && **line && **line == '<')
 	{
-		new->string = copy_token(line, NULL);
-		new->type = IN_REDIR; 
+		new->string = ft_strdup("<\0");
+		new->type = IN_REDIR;
+		*line = *line + 1;
 	}
 	else
 		new = create_outred_struct(line, new);

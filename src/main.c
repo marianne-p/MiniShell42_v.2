@@ -78,8 +78,11 @@ void	handle_oneline(t_minish **msh)
 {
 	// printf("NO_TTY\n");
 	(*msh)->tokens = tokenize_oneline();
-	print_tokens((*msh)->tokens);
-	free_tokens((*msh)->tokens);
+	if ((*msh)->tokens != NULL)
+	{
+		print_tokens((*msh)->tokens);
+		free_tokens((*msh)->tokens);
+	}
 	exit(0);
 }
 
@@ -98,8 +101,11 @@ void    msh_loop(t_minish **msh)
         {
             add_history(line);
             (*msh)->tokens = tokenize(line);
-			print_tokens((*msh)->tokens);
-			free_tokens((*msh)->tokens);
+			if ((*msh)->tokens != NULL)
+			{
+				print_tokens((*msh)->tokens);
+				free_tokens((*msh)->tokens);
+			}
             // msh->leaf = parse(msh->tokens);
             // exec_ast(msh->leaf, msh);
             // free_ast(&(msh->leaf));
