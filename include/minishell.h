@@ -33,6 +33,7 @@
 
 typedef enum e_nodes
 {
+	ERROR,
 	CMD,
 	CMD_CUST,
 	IN_REDIR,
@@ -124,6 +125,19 @@ typedef struct s_minish
  * @return 
  */
 t_string	*tokenize(char *line);
+
+
+/**
+ * @brief executes the line provided as argument (argv) input to minishell
+ * 			For example, ./minishell ls || echo "fail"
+ * @return head of the linked list with t_string * tokens
+ */
+t_string	*tokenize_oneline(void);
+
+/**
+ * @brief checks the token type ()
+ */
+t_node_type find_token_type(char *token);
 
 /**
  * @brief Splits the line into tokens which 

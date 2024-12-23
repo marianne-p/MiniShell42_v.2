@@ -2,12 +2,14 @@
 
 void	skip_blanks(char **line)
 {
-	while (ft_isblank(**line))
+	while (*line && **line && ft_isblank(**line))
 		(*line)++;
 }
 
 t_node_type find_token_type(char *token)
 {
+	if (!token)
+		return (ERROR);
     if (!ft_strncmp(token, "(", 1))
         return (OPEN_BRACKET);
     else if (!ft_strncmp(token, ")", 1))
@@ -44,18 +46,20 @@ char	*copy_quote(char **line_start, char quote, char *str)
 	int	i;
 
 	i = 1;
-	while ((*line_start)[i] != quote)
+	while (*line_start && (*line_start)[i] && (*line_start)[i] != quote)
 		i++;
-	str = malloc(i + 2);
+	str = malloc(i);
 	if (str == NULL)
 		return (NULL);
 	i = 0;
-	while (**line_start != quote)
+	(*line_start)++;
+	while (*line_start && *(*line_start) && *(*line_start) != quote)
 	{
 		str[i++] = **line_start;
 		(*line_start)++;
 	}
-	str[i] = quote;
+	if (**line_start == quote)
+		(*line_start)++;
 	str[i] = '\0';
 	return (str);
 }
@@ -67,13 +71,13 @@ char	*copy_token(char **line, char *str)
 	i = 0;
 	if (ft_isblank(**line))
 		skip_blanks(line);	
-	while (!ft_isblank((*line)[i]))
+	while (*line && (*line)[i] && !ft_isblank((*line)[i]))
 		i++;
 	str = malloc(i + 1);
 	if (str == NULL)
 		return (NULL);
 	i = 0;
-	while (!ft_isblank(**line))
+	while (*line && **line && !ft_isblank(**line))
 	{
 		str[i++] = **line;
 		(*line)++;
@@ -85,7 +89,7 @@ char	*copy_token(char **line, char *str)
 t_string	*find_expression(t_string *new, char **line)
 {
 	new->type = find_token_type(*line);
-	if (new->type == AND || new->type == OR)
+	if (new && new->type && (new->type == AND || new->type == OR))
 	{
 		new->string = malloc(3);
 		if (!new->string)
@@ -111,7 +115,7 @@ t_string	*find_expression(t_string *new, char **line)
 
 char	*copy_line(char **line, int i, char *str)
 {
-	while ((*line)[i] != '\'' && (*line)[i] != '"'
+	while (*line && (*line)[i] && (*line)[i] != '\'' && (*line)[i] != '"'
 			&& (*line)[i] != '|' && (*line)[i] !='(' 
 			&& (*line)[i] != '&' && (*line)[i] != ')'
 			&& (*line)[i] != '\0' && !ft_isblank((*line)[i]))
@@ -120,7 +124,7 @@ char	*copy_line(char **line, int i, char *str)
 	if (!str)
 		return (NULL);
 	i = 0;
-	while (**line != '\'' && **line != '"'
+	while (*line && **line && **line != '\'' && **line != '"'
 			&& **line != '|' && **line !='(' 
 			&& **line != '&' && **line != ')'
 			&& **line != '\0' && !ft_isblank(**line))
@@ -135,12 +139,12 @@ char	*copy_line(char **line, int i, char *str)
 
 t_string	*create_outred_struct(char **line, t_string *new)
 {
-	if (!ft_strncmp(*line, ">>", 2))
+	if (*line && !ft_strncmp(*line, ">>", 2))
 	{
 		new->string = copy_token(line, NULL);
 		new->type = OUT_REDIR_APPEND; 
 	}
-	else if (**line == '>')
+	else if (*line && **line && **line == '>')
 	{
 		new->string = copy_token(line, NULL);
 		new->type = OUT_REDIR;
@@ -155,22 +159,22 @@ t_string	*create_outred_struct(char **line, t_string *new)
 
 t_string	*create_string_struct(char **line, t_string *new)
 {
-	if (**line == '\'')
+	if (*line && **line && **line == '\'')
 	{
 		new->string = copy_quote(line, '\'', NULL);
 		new->type = COMMENT; 
 	}
-	else if (**line == '"')
+	else if (*line && **line && **line == '"')
 	{
 		new->string = copy_quote(&(new->string), '"', NULL);
 		new->type = COMMENT_APPEND;
 	}
-	else if (!ft_strncmp(*line, "<<", 2))
+	else if (*line && **line && !ft_strncmp(*line, "<<", 2))
 	{
 		new->string = copy_token(line, NULL);
 		new->type = HERE_DOC;
 	}
-	else if (**line == '<')
+	else if (*line && **line && **line == '<')
 	{
 		new->string = copy_token(line, NULL);
 		new->type = IN_REDIR; 
@@ -182,18 +186,16 @@ t_string	*create_string_struct(char **line, t_string *new)
 
 t_string	*split_logical(char **line, t_string *new)
 {
-	if (ft_isblank(**line))
+	if (*line && **line && ft_isblank(**line))
 		skip_blanks(line);	
-	if (**line == '|' || **line == '(' || **line == '&' || **line == ')')
+	if (*line && **line
+			&& (**line == '|' || **line == '(' || **line == '&' || **line == ')'))
 	{
 		new = find_expression(new, line);
 	}
 	else
 	{
 		new = create_string_struct(line, new);	
-		// new->string = copy_line(line, 0, NULL);
-		// new->type = CMD_LINE;
-		// split_cmd(new, 0);
 	}
 	new->next = NULL;
 	return (new);
