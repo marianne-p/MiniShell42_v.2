@@ -61,17 +61,17 @@ void print_tokens(t_string *tokens)
     while (current)
     {
         if (current->string)
-            printf("%s %s", current->string, token_type_to_str(current->type));
+            fprintf(stderr, "%s %s", current->string, token_type_to_str(current->type));
         else
-            printf("(null) %s", token_type_to_str(current->type));
+            fprintf(stderr, "(null) %s", token_type_to_str(current->type));
 
         if (current->next && current->next != tokens)
-            printf(" -> ");
+            fprintf(stderr, " -> ");
         current = current->next;
 		if (current == tokens || current == NULL)
 			break ;
     }
-    printf("\n");
+    fprintf(stderr, "\n");
 }
 
 void	handle_oneline(t_minish **msh)

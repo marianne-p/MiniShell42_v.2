@@ -5,13 +5,30 @@ void    free_tokens(t_string *tokens)
 	t_string    *tmp;
 	t_string	*start;
 
-	start = tokens;
-	while (tokens != start)
+	if (tokens->prev != NULL)
 	{
-		tmp = tokens;
-		tokens = tokens->next;
-		free(tmp->string);
-		free(tmp);
+		start = tokens->prev;
+		while (tokens)
+		{
+			tmp = tokens;
+			tokens = tmp->next;
+			fprintf(stderr, "Deleting '%s'\n", tmp->string);
+			free(tmp->string);
+			free(tmp);
+			tmp = NULL;
+			if (tokens == start)
+			{
+				fprintf(stderr, "Deleting start '%s'\n", start->string);
+				free (start->string);
+				free (start);
+				break ;
+			}
+		}
+	}
+	else
+	{
+		free(tokens->string);
+		free(tokens);
 	}
 }
 

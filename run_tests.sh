@@ -29,36 +29,54 @@ for CMD in "${TEST_COMMANDS[@]}"; do
   echo "Test Command: $CMD"
   echo "--------------------------"
 
-  # 1. Capture output of minishell in non-interactive mode (piping the command)
+  #
+  # 1. Capture minishell output in non-interactive mode
+  #
   OUTPUT=$(echo "$CMD" | $MINISHELL_BIN 2>&1)
   
   # Print the minishell output
   echo "Result:"
   echo "$OUTPUT"
 
+  #
   # 2. Run valgrind on the same scenario
+  #
   VALGRIND_OUTPUT=$(echo "$CMD" | valgrind --leak-check=full $MINISHELL_BIN 2>&1)
   
   # Extract lines with 'definitely lost:' and 'ERROR SUMMARY'
   DEFINITELY_LOST=$(echo "$VALGRIND_OUTPUT" | grep "definitely lost:")
   ERROR_SUMMARY=$(echo "$VALGRIND_OUTPUT" | grep "ERROR SUMMARY")
 
-  # Check if "definitely lost:" line is the "0 bytes in 0 blocks" case
+  #
+  # 3. Check each line and color-code it
+  #
+  IS_RED=0
+  
+  # definitely lost
   if echo "$DEFINITELY_LOST" | grep -q "definitely lost: 0 bytes in 0 blocks"; then
     echo -e "Valgrind (definitely lost): ${GREEN}$DEFINITELY_LOST${RESET}"
   else
     echo -e "Valgrind (definitely lost): ${RED}$DEFINITELY_LOST${RESET}"
+    IS_RED=1
   fi
 
-  # Check if "ERROR SUMMARY" line says "0 errors from 0 contexts (suppressed: 0 from 0)"
+  # error summary
   if echo "$ERROR_SUMMARY" | grep -q "ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)"; then
     echo -e "Valgrind (error summary):   ${GREEN}$ERROR_SUMMARY${RESET}"
   else
     echo -e "Valgrind (error summary):   ${RED}$ERROR_SUMMARY${RESET}"
+    IS_RED=1
+  fi
+
+  #
+  # 4. If either line was "red," print the full Valgrind output for debugging
+  #
+  if [ "$IS_RED" -eq 1 ]; then
+    echo -e "${RED}Full Valgrind output (since there's a potential issue):${RESET}"
+    echo "$VALGRIND_OUTPUT"
   fi
 
 done
 
 echo
 echo "All tests completed!"
-

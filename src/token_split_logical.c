@@ -91,13 +91,13 @@ t_string	*find_expression(t_string *new, char **line)
 	new->type = find_token_type(*line);
 	if (new && new->type && (new->type == AND || new->type == OR))
 	{
-		new->string = malloc(3);
-		if (!new->string)
-			return (NULL);
+		// new->string = malloc(3);
+		// if (!new->string)
+		// 	return (NULL);
 		if (new->type == AND)
-			new->string = "&&\0";
+			new->string = ft_strdup("&&\0");
 		else
-			new->string = "||\0";
+			new->string = ft_strdup("||\0");
 		*line = *line + 2;
 	}
 	else
@@ -198,5 +198,8 @@ t_string	*split_logical(char **line, t_string *new)
 		new = create_string_struct(line, new);	
 	}
 	new->next = NULL;
+	new->prev = NULL;
+	if (*line && **line && ft_isblank(**line))
+		skip_blanks(line);	
 	return (new);
 }
