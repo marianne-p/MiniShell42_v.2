@@ -119,8 +119,8 @@ typedef struct s_minish
 {
 	t_string		*tokens;
 	struct s_ast	*leaf;
-	//struct s_ev		*env;
 	//char			**envv;
+	t_list			*env;
 }	t_minish;
 
 

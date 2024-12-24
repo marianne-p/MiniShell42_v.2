@@ -27,6 +27,7 @@ void    msh_loop(t_minish *msh)
         if (*line)
         {
             add_history(line);
+			line = expand_line(line, msh, 0);
             msh->tokens = tokenize(line);
 			free_tokens(msh->tokens);
             // msh->leaf = parse(msh->tokens);
@@ -37,15 +38,18 @@ void    msh_loop(t_minish *msh)
     }
 }
 
-int main(void)
+int main(int argc, char **argv, char **env)
 {
     t_minish *msh;
 
+	(void)argc;
+	(void)argv;
     msh = (t_minish *)malloc(sizeof(t_minish));
     if (!msh)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
+	msh->env = init_env(NULL, env);
     msh_loop(msh);
     free(msh);
     return (0);
