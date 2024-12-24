@@ -225,6 +225,7 @@ t_env		*ft_get_env(t_list *lst, char *key);
  * Return NULL if enviroment variable with 'key' does not exist
  */
 t_list		*ft_get_env_node(t_list *lst, char *key);
+
 /**
  * @brief Print enviroment variables to standart output
  * @param lst List of enviroment variables
@@ -246,19 +247,5 @@ char		**split_path(t_list *lst, char *key, char c);
  * @param env t_env pointer
  */
 void		free_env(void *env);
-
-/*Built-ins*/
-// void	exec_builtin(t_node *node, t_minish **msh_ptr);
-// int		exec_exit(t_node *node, t_minish **msh_ptr);
-// void	ft_pwd(void);
-// int		ft_cd(char *path);
-// int		ft_echo(char **cmd);
-// void	ft_exit(char *str, t_minish **msh_ptr, int ret, void *temp);
-// int		ft_export(char **av, t_envv **head);
-// void	print_all_envv(t_envv *head);
-// void	free_envv(t_envv **node);
-// void	ft_addenvv(t_envv **env_ptr, char *sngl, t_envv *new);
-// int		ft_unset(char *key, t_envv **head);
-// void	ft_env(t_minish *minish);
 
 #endif
