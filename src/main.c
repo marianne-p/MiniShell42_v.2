@@ -27,9 +27,11 @@ void    msh_loop(t_minish *msh)
         if (*line)
         {
             add_history(line);
+			fprintf(stderr, "BEFORE: %s\n", line);
 			line = expand_line(line, msh, 0);
-            msh->tokens = tokenize(line);
-			free_tokens(msh->tokens);
+			fprintf(stderr, "AFTER: %s\n", line);
+            // msh->tokens = tokenize(line);
+			// free_tokens(msh->tokens);
             // msh->leaf = parse(msh->tokens);
             // exec_ast(msh->leaf, msh);
             // free_ast(&(msh->leaf));
@@ -49,7 +51,8 @@ int main(int argc, char **argv, char **env)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
-	if (init_env(NULL, env) < 0)
+	msh->env = NULL;
+	if (init_env(&(msh->env), env) < 0)
 		perror("Failed to initialize env\n");
     msh_loop(msh);
     free(msh);
