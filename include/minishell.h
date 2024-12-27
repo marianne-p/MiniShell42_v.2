@@ -117,7 +117,7 @@ typedef struct s_minish
 	t_list			*env;
 }	t_minish;
 
-
+char	*expand_line(char *line, t_minish *msh, size_t i);
 /*Tokenize*/
 /**
  * @brief Creates double linked list of tokens

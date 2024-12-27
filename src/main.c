@@ -101,7 +101,7 @@ void    msh_loop(t_minish **msh)
         {
             add_history(line);
 			fprintf(stderr, "BEFORE: %s\n", line);
-			line = expand_line(line, msh, 0);
+			line = expand_line(line, *msh, 0);
 			fprintf(stderr, "AFTER: %s\n", line);
 			/*TOKENS STAGE*/
     		// if ((*msh)->tokens != NULL)
@@ -131,14 +131,11 @@ int main(int argc, char **argv, char **env)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
-<<<<<<< HEAD
+	if (init_env(&(msh->env), env) < 0)
+		perror("Env initialization failed\n");
 	if (!isatty(STDIN_FILENO))
 		handle_oneline(&msh);
     msh_loop(&msh);
-=======
-	msh->env = init_env(NULL, env);
-    msh_loop(msh);
->>>>>>> 743edd995e736b10a13160b3cf767a28b7be5ef0
     free(msh);
     return (0);
 }
