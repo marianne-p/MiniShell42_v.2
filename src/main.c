@@ -100,12 +100,18 @@ void    msh_loop(t_minish **msh)
         if (*line)
         {
             add_history(line);
-            (*msh)->tokens = tokenize(line);
-			if ((*msh)->tokens != NULL)
-			{
-				print_tokens((*msh)->tokens);
-				free_tokens((*msh)->tokens);
-			}
+			fprintf(stderr, "BEFORE: %s\n", line);
+			line = expand_line(line, msh, 0);
+			fprintf(stderr, "AFTER: %s\n", line);
+			/*TOKENS STAGE*/
+    		// if ((*msh)->tokens != NULL)
+			// {
+			// 	print_tokens((*msh)->tokens);
+			// 	free_tokens((*msh)->tokens);
+			// }
+			// (*msh)->tokens = tokenize(line);
+			// free_tokens((*msh)->tokens);
+			/*PARSING*/
             // msh->leaf = parse(msh->tokens);
             // exec_ast(msh->leaf, msh);
             // free_ast(&(msh->leaf));
@@ -114,18 +120,25 @@ void    msh_loop(t_minish **msh)
     }
 }
 
-int main(void)
+int main(int argc, char **argv, char **env)
 {
     t_minish *msh;
 
+	(void)argc;
+	(void)argv;
     msh = (t_minish *)malloc(sizeof(t_minish));
     if (!msh)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
+<<<<<<< HEAD
 	if (!isatty(STDIN_FILENO))
 		handle_oneline(&msh);
     msh_loop(&msh);
+=======
+	msh->env = init_env(NULL, env);
+    msh_loop(msh);
+>>>>>>> 743edd995e736b10a13160b3cf767a28b7be5ef0
     free(msh);
     return (0);
 }
