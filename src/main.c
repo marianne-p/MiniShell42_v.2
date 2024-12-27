@@ -49,7 +49,8 @@ int main(int argc, char **argv, char **env)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
-	msh->env = init_env(NULL, env);
+	if (init_env(NULL, env) < 0)
+		perror("Failed to initialize env\n");
     msh_loop(msh);
     free(msh);
     return (0);

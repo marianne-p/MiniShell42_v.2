@@ -16,18 +16,18 @@ t_node_type find_token_type(char *token)
         return (STRING);
 }
 
-// void    free_split(char **str)
-// {
-//     char    **tmp;
+void    free_split(char **str)
+{
+    char    **tmp;
 
-//     tmp = str;
-//     while (tmp && *tmp)
-//     {
-//         free(*tmp);
-//         tmp++;
-//     }
-//     free(str);
-// }
+    tmp = str;
+    while (tmp && *tmp)
+    {
+        free(*tmp);
+        tmp++;
+    }
+    free(str);
+}
 
 /*	copies quote to quote, including the quotes '/" 
 *	moves the pointer through the string 'line' 

@@ -7,15 +7,45 @@ char	*copy_string(char *line, int *i, char *res)
 	k = *i + 1;
 	line[*i] = '\0';
 	while (line[*i] != '\'')
-		*i++;
+		(*i)++;
 	if (line[*i] == '\'')
 		line[*i] = '\0';
 	else 
 	{
-		
+		printf("No matching quotes\n");	
 	}
 	res = ft_strjoin(line, line + k);
 	return (res);
+}
+
+char	*copy_first_str(char *prev, char *start, char *end)
+{
+	int		i;
+	char	*new;
+	char	*res;
+
+	i = 0;
+	while (start + i != end)
+		i++;
+	new = malloc(i + 1);
+	i = 0;
+	while (start + i != end)
+	{
+		new[i] = start[i];
+		i++;
+	}
+	new[i] = '\0';
+	res = ft_strjoin(prev, new);
+	if (prev != NULL)
+		free(prev);
+	free(new);
+	return (res);
+}
+
+void	skip_key(char *line, int *i)
+{
+	while (!ft_isblank(line[*i]))
+		(*i)++;
 }
 
 char	*find_key(char *key_start)
@@ -60,12 +90,13 @@ char	*expand_dbl_quote(char *line, int *i, t_minish *msh)
 	free(str1);
 	str1 = str2 = NULL;
 	free(str2);
-	skip_key(line, &i);
+	skip_key(line, i);
 	if (line[*i] != '"')
 		str1 = line + *i;
+	return (result);
 }
 
-char	*expand_line(char *line, t_minish *msh, size_t i)
+char	*expand_line(char *line, t_minish *msh, int i)
 {
 	char	*result;
 
@@ -90,4 +121,5 @@ char	*expand_line(char *line, t_minish *msh, size_t i)
 		else
 			i++;
 	}
+	return (line);
 }

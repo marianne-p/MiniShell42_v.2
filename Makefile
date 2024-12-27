@@ -12,7 +12,10 @@
 
 NAME	:= minishell
 SRC_DIR	:= src
-SRC	:= main.c token.c bonus_parser.c token_split_logical.c
+SRC	:= main.c token.c bonus_parser.c token_split_logical.c \
+		env_list_to_arr.c ft_env_unset.c ft_get_env.c ft_set_env.c \
+		init_env.c print_env_list.c split_path.c \
+		expand_line.c 
 OBJ_DIR	:= obj
 CFLAGS	:= -Wall -Wextra -Werror -g -I./include
 LIBFT_DIR	:= ./ft_libft
