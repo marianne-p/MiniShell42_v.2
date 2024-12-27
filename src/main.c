@@ -76,13 +76,33 @@ void print_tokens(t_string *tokens)
 
 void	handle_oneline(t_minish **msh)
 {
-	// printf("NO_TTY\n");
-	(*msh)->tokens = tokenize_oneline();
-	if ((*msh)->tokens != NULL)
+	char    *final_str;
+	char    *line;
+	char    *temp;
+	// t_string	*start;
+
+	final_str = ft_strdup("");
+	if (!final_str)
+		return ;
+	while ((line = get_next_line(STDIN_FILENO)) != NULL)
 	{
-		print_tokens((*msh)->tokens);
-		free_tokens((*msh)->tokens);
+		// printf("line = '%s'\n", line);
+		temp = final_str;
+		final_str = ft_strjoin(temp, line);
+		free(temp);
+		free(line);
+		if (!final_str)
+			return ;
 	}
+	fprintf(stderr, "BEFORE: %s\n", final_str);
+	line = expand_line(final_str, *msh, 0);
+	fprintf(stderr, "AFTER: %s\n", line);
+	// (*msh)->tokens = tokenize_oneline();
+	// if ((*msh)->tokens != NULL)
+	// {
+	// 	print_tokens((*msh)->tokens);
+	// 	free_tokens((*msh)->tokens);
+	// }
 	exit(0);
 }
 

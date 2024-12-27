@@ -44,7 +44,8 @@ char	*copy_first_str(char *prev, char *start, char *end)
 
 void	skip_key(char *line, int *i)
 {
-	while (line[*i] != '\0' && line[*i] != '"' && !ft_isblank(line[*i]))
+	while ((ft_isalnum(line[*i]) || line[*i] == '_') &&
+		line[*i] != '\0' && line[*i] != '"' && !ft_isblank(line[*i]))
 		(*i)++;
 }
 
@@ -54,11 +55,13 @@ char	*find_key(char *key_start)
 	char	*ret;
 
 	k = 0;
-	while (key_start[k] && key_start[k] != '"' && !ft_isblank(key_start[k]))
+	while ((ft_isalnum(key_start[k]) || key_start[k] == '_') &&
+			key_start[k] && key_start[k] != '"' && !ft_isblank(key_start[k]))
 		k++;
 	ret = malloc (k + 1);
 	k = 0;
-	while (key_start[k] && key_start[k] != '"' && !ft_isblank(key_start[k]))
+	while ((ft_isalnum(key_start[k]) || key_start[k] == '_') &&
+		key_start[k] && key_start[k] != '"' && !ft_isblank(key_start[k]))
 	{
 		ret[k] = key_start[k];
 		k++;
@@ -87,6 +90,7 @@ char	*expand_dbl_quote(char *line, int *i, t_minish *msh)
 	{
 		if (line[*i] == '$')
 		{
+			//if (!(ft_isalpha(line[*i + 1])) && line[*i + 1] != '_')
 			if (!str1 && *i > 1)
 				str1 = copy_first_str(NULL, line, line + *i); //if there is no start point for joining, line...line + i
 			else if (*i > 1)

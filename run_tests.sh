@@ -12,6 +12,39 @@ RESET="\033[0m"
 PASS_COUNT=0
 FAIL_COUNT=0
 
+ALL_EXPANSION_TEST_COMMANDS=(
+  "echo \"hey \$USER \$SHELL\"" # Variable expansion within double quotes
+  "echo '\$USER'" # Literal output of variable name with single quotes
+  "USER=test echo \$USER" # Temporary variable in the same line
+  "unset USER && echo \$USER" # Check behavior with undefined variable
+  "echo \$\$" # PID expansion
+  "echo \$?" # Exit status of the last command
+  "echo \$0" # Shell script name or shell identifier
+  "echo '\$\"'\$'" # Mixing quotes with special characters
+  "echo \$((3 + 5))" # Arithmetic expansion (if supported)
+  "echo \$HOME/test" # Path expansion with a variable
+)
+
+EXPANSION_TEST_COMMANDS=(
+  "echo \"\$USER\""                     # Single environment variable inside double quotes
+  "echo \"hello \$USER!\""              # Env var with text before and after
+  "echo \"\$USER \$SHELL\""             # Two env vars separated by space
+  "echo \"\$USER\$SHELL\""              # Two env vars with no space
+  "echo \"\$USER \$SHELL and \$HOME\""  # Three env vars with spaces and text
+  "echo \"Path: \$PATH\""               # Env var with text before
+  "echo \"No env var here\""            # Text with no env vars
+  "echo \"\$UNDEFINED_VAR\""            # Undefined environment variable
+#   "USER=test SHELL=/bin/bash echo \"\$USER \$SHELL\""  # Temp env vars within command
+#   "unset USER && echo \"\$USER\""       # Env var explicitly unset
+  "echo \"Before \$USER After\""        # Text before and after an env var
+  "echo \"\$USER \$USER\""              # Repeated env var
+  "echo \"\$ \$\$\""                    # Special variables: $ and PID
+  "echo \"\$\$ \$?\""                   # Special variables: PID and last exit status
+  "echo \"\$USER\""                     # Single env var as the only input
+)
+
+ALL_EXPANSION_TEST_COMMANDS+=("${EXPANSION_TEST_COMMANDS[@]}")
+
 TEST_COMMANDS=(
   "" # 1. Empty input
   "ls" # 2. Single command
@@ -36,6 +69,8 @@ TEST_COMMANDS=(
   "(echo << here_doc|cat&&ls)" # 21. Multiple operators without spaces ( (, |, &&, ) )
 )
 
+TEST_COMMANDS+=("${EXPANSION_TEST_COMMANDS[@]}")
+
 # Print header
 echo "=========================="
 echo "      Minishell Tests     "
@@ -43,7 +78,7 @@ echo "=========================="
 
 i=1
 
-for CMD in "${TEST_COMMANDS[@]}"; do
+for CMD in "${EXPANSION_TEST_COMMANDS[@]}"; do
   echo
   echo "Test $i, Command: $CMD"
   echo "--------------------------"
