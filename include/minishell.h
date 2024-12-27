@@ -117,7 +117,8 @@ typedef struct s_minish
 	t_list			*env;
 }	t_minish;
 
-char	*expand_line(char *line, t_minish *msh, size_t i);
+
+char	*expand_line(char *line, t_minish *msh, int i);
 /*Tokenize*/
 /**
  * @brief Creates double linked list of tokens
@@ -161,7 +162,7 @@ t_string	*split_logical(char **line, t_string *new);
  */
 void		free_tokens(t_string *tokens);
 // t_ast		*parse(t_string *tokens);
-// void		free_split(char **str);
+void		free_split(char **str);
 
 /**
 * @brief Printing path of current working directory

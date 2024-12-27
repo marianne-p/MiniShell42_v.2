@@ -131,6 +131,7 @@ int main(int argc, char **argv, char **env)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
+	msh->env = NULL;
 	if (init_env(&(msh->env), env) < 0)
 		perror("Env initialization failed\n");
 	if (!isatty(STDIN_FILENO))
