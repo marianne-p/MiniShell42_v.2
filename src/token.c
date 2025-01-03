@@ -17,12 +17,12 @@ t_string    *tokenize(char *line)
     t_string    *new;
     t_string    *tmp;
 	char		*line_cpy;
-	char		*line_start;
+	// char		*line_start;
 
     start = NULL;
     tmp = NULL;
 	line_cpy = ft_strdup(line);
-	line_start = line_cpy;
+	// line_start = line_cpy;
     while (*line_cpy)
     {
         new = (t_string *)malloc(sizeof(t_string));
