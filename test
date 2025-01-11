@@ -1,0 +1,90 @@
+c2r3s3% bash
+mpihur@c2r3s3:~$ cat <<hello <<mini <banana
+> ^C
+mpihur@c2r3s3:~$ cat <<hello <<mini <<banana
+> banana
+> hello
+> mini
+> hiiii
+> banana
+hiiii
+mpihur@c2r3s3:~$ cat <<hello <mini <<banana
+> hiii
+> hello
+> yuuuuu
+> banana
+bash: mini: No such file or directory
+mpihur@c2r3s3:~$ cat << hel"l"o
+> $USER
+> hel
+> hello
+$USER
+hel
+mpihur@c2r3s3:~$ echo hel"l"o
+hello
+mpihur@c2r3s3:~$ echo hel "l" o
+hel l o
+mpihur@c2r3s3:~$ echo "'hello'"
+'hello'
+mpihur@c2r3s3:~$ ls|ls
+archive  Dec_24  Downloads  goinfre  mpihur  Music  Pictures  Public  Videos
+mpihur@c2r3s3:~$ ls|echo "hey"
+hey
+mpihur@c2r3s3:~$ ls|echo "hey"
+hey
+mpihur@c2r3s3:~$ ls|cat
+archive
+Dec_24
+Downloads
+goinfre
+mpihur
+Music
+Pictures
+Public
+Videos
+mpihur@c2r3s3:~$ echo hel"$USER"o
+helmpihuro
+mpihur@c2r3s3:~$ echo hel"'$USER'"o
+hel'mpihur'o
+mpihur@c2r3s3:~$ export a="ho 123"
+mpihur@c2r3s3:~$ ec$a
+123
+mpihur@c2r3s3:~$ ec$a " $a "' $a '
+123  ho 123  $a 
+mpihur@c2r3s3:~$ cat|cat|ls
+archive  Dec_24  Downloads  goinfre  mpihur  Music  Pictures  Public  Videos
+^C
+mpihur@c2r3s3:~$ cat|cat|ls
+archive  Dec_24  Downloads  goinfre  mpihur  Music  Pictures  Public  Videos
+
+
+mpihur@c2r3s3:~$ cat|cat|wc
+
+
+
+
+
+
+
+kkkh
+^C
+mpihur@c2r3s3:~$ ls
+archive  Dec_24  Downloads  goinfre  mpihur  Music  Pictures  Public  Videos
+mpihur@c2r3s3:~$ touch aaaaaaaaaaaaaaaa
+mpihur@c2r3s3:~$ sfdjkhsfdjhksfd
+sfdjkhsfdjhksfd: command not found
+mpihur@c2r3s3:~$ ls |
+> 
+> ^C
+mpihur@c2r3s3:~$ cat <<hello
+> ^C
+mpihur@c2r3s3:~$ echo -n
+mpihur@c2r3s3:~$ echo -nnnnnnnnnnnnnnnnnn
+mpihur@c2r3s3:~$ echo -nkjjkhk
+-nkjjkhk
+mpihur@c2r3s3:~$ echo -nkjjkhk -nnnnnnnnnnn
+-nkjjkhk -nnnnnnnnnnn
+mpihur@c2r3s3:~$ echo -n -nnnnnnnnnnnnn
+mpihur@c2r3s3:~$ -e cat aaaaaaaaaaaaaaaa 
+-e: command not found
+

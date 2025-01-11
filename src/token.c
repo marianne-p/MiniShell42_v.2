@@ -17,24 +17,27 @@ t_string    *tokenize(char *line)
     t_string    *new;
     t_string    *tmp;
 	char		*line_cpy;
-	// char		*line_start;
+	char		*line_start;
 
     start = NULL;
     tmp = NULL;
 	line_cpy = ft_strdup(line);
-	// line_start = line_cpy;
+	line_start = line_cpy;
     while (*line_cpy)
     {
         new = (t_string *)malloc(sizeof(t_string));
         if (!new)
             return (NULL);
-		new = NULL;
-		new = split_logical(line_cpy, 0, new);	
-        // new->type = find_token_type(*token_str);
-        // new->string = ft_strdup(*token_str);
-        if (!*(line + 1))
+		new = split_logical(&line_cpy, new);	
+		if (new->string == NULL)
+		{
+			free (new);
+			new = NULL;
+			continue ;
+		}
+        if (!*line_cpy && start)
         {
-            start->prev = new;
+			start->prev = new;
             new->next = start;
         }
         new->prev = tmp;
@@ -43,8 +46,22 @@ t_string    *tokenize(char *line)
         tmp = new;
         if (!start)
             start = new;
+		if (new->prev && new->prev->type == HERE_DOC)
+			new->type = COMMENT;
+
 	}
-	free(line_cpy);
+	free(line_start);
     // free_split(tmp_str);
     return (start);
+}
+
+t_string	*tokenize_oneline(char *final_str)
+{
+	t_string	*start;
+
+	if (!final_str)
+		return (NULL);
+	start = tokenize(final_str);
+	free(final_str);
+	return (start);
 }

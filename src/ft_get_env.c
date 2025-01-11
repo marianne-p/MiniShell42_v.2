@@ -33,6 +33,7 @@ t_env	*ft_get_env(t_list *lst, char *key)
 	t_list	*node;
 
 	node = ft_get_env_node(lst, key);
+	free(key);
 	if (node != NULL)
 		return ((t_env *)(node->content));
 	return (NULL);

@@ -1,7 +1,15 @@
 #include "../include/minishell.h"
 
+void	skip_blanks(char **line)
+{
+	while (*line && **line && ft_isblank(**line))
+		(*line)++;
+}
+
 t_node_type find_token_type(char *token)
 {
+	if (!token)
+		return (ERROR);
     if (!ft_strncmp(token, "(", 1))
         return (OPEN_BRACKET);
     else if (!ft_strncmp(token, ")", 1))
@@ -16,112 +24,248 @@ t_node_type find_token_type(char *token)
         return (STRING);
 }
 
-// void    free_split(char **str)
-// {
-//     char    **tmp;
+void    free_split(char **str)
+{
+    char    **tmp;
 
-//     tmp = str;
-//     while (tmp && *tmp)
-//     {
-//         free(*tmp);
-//         tmp++;
-//     }
-//     free(str);
-// }
+    tmp = str;
+    while (tmp && *tmp)
+    {
+        free(*tmp);
+        tmp++;
+    }
+    free(str);
+}
 
 /*	copies quote to quote, including the quotes '/" 
 *	moves the pointer through the string 'line' 
 */
 
-char	*copy_str(char *line_start, char quote, char *str)
+char	*copy_quote(char **line_start, char quote, char *str)
 {
 	int	i;
 
 	i = 1;
-	while (line_start[i] != quote)
+	while (*line_start && (*line_start)[i] && (*line_start)[i] != quote)
 		i++;
-	str = malloc(i + 2);
+	if (i == 1)
+	{
+		*line_start = *line_start + 2;
+		return (NULL);
+	}
+	str = malloc(i);
 	if (str == NULL)
 		return (NULL);
-	while (*line_start != quote)
-		*(str)++ = *(line_start++);
-	*str = quote;
-	*str = '\0';
+	i = 0;
+	(*line_start)++;
+	while (*line_start && *(*line_start) && *(*line_start) != quote)
+	{
+		str[i++] = **line_start;
+		(*line_start)++;
+	}
+	if (**line_start == quote)
+		(*line_start)++;
+	str[i] = '\0';
 	return (str);
 }
 
-t_string	*find_expression(t_string *new, char *line)
+char	*copy_token(char **line, char *str)
 {
-	new->type = find_token_type(line);
-	if (new->type == AND || new->type == OR)
+	int	i;
+
+	i = 0;
+	if (ft_isblank(**line))
+		skip_blanks(line);	
+	printf("CHARs checked:\n");
+	while (*line && (*line)[i] && !ft_isblank((*line)[i])
+			&& (*line)[i] != '|' && (*line)[i] !='(' 
+			&& (*line)[i] != '&' && (*line)[i] != ')'
+			&& (*line)[i] != '\0')
+		{
+			printf("%c,", (*line)[i]);
+			if ((*line)[i] == '\'')
+			{
+				i++;
+				while ((*line)[i] != '\'')
+					i++;
+				i++;
+			}
+			else if ((*line)[i] == '"')
+			{
+				i++;
+				while ((*line)[i] != '"')
+					i++;
+				i++;
+			}
+			else
+			{
+				printf("\nOTHER CHAR: %c\n", (*line)[i]);
+				i++;
+			}
+		}
+	str = malloc(i + 1);
+	if (str == NULL)
+		return (NULL);
+	i = 0;
+	while (*line && **line && !ft_isblank(**line)
+			&& (**line) != '|' && (**line) !='(' 
+			&& (**line) != '&' && (**line) != ')'
+			&& (**line) != '\0')
 	{
-		new->string = malloc(3);
-		if (!new->string)
-			return (NULL);
-		if (new->type == AND)
-			new->string = "&&\0";
+		if (**line == '\'')
+		{
+            str[i++] = **line;
+            (*line)++;
+			while (**line != '\'')
+			{
+				str[i++] = **line;
+				(*line)++;
+			}
+			str[i++] = **line;
+			(*line)++;			
+		}
+		else if (**line == '"')
+		{
+            str[i++] = **line;
+            (*line)++;
+			while (**line != '"')
+			{
+				str[i++] = **line;
+				(*line)++;
+			}
+			str[i++] = **line;
+			(*line)++;
+		}
 		else
-			new->string = "||\0";
+		{
+			str[i++] = **line;
+			(*line)++;
+		}
+	}
+	str[i] = '\0';
+	return (str);
+}
+
+t_string	*find_expression(t_string *new, char **line)
+{
+	new->type = find_token_type(*line);
+	if (new && new->type && (new->type == AND || new->type == OR))
+	{
+		// new->string = malloc(3);
+		// if (!new->string)
+		// 	return (NULL);
+		if (new->type == AND)
+			new->string = ft_strdup("&&\0");
+		else
+			new->string = ft_strdup("||\0");
+		*line = *line + 2;
 	}
 	else
 	{
 		new->string = malloc(2);
 		if (!new->string)
 			return (NULL);
-		new->string[0] = *line;
+		new->string[0] = **line;
 		new->string[1] = '\0';
-		line++;
+		(*line)++;
 	}
 	return(new);
 
 } 
 
-void	skip_blanks(char *line)
+char	*copy_line(char **line, int i, char *str)
 {
-	while (ft_isblank(*line))
-		line++;
-}
-
-char	*copy_line(char *line, int i, char *str)
-{
-	while (line[i] != '\'' && line[i] != '"'
-			&& line[i] != '|' && line[i] !='(' 
-			&& line[i] != '&' && line[i] != ')'
-			&& line[i] != '\0' && !ft_isblank(line[i]))
+	while (*line && (*line)[i] && (*line)[i] != '\'' && (*line)[i] != '"'
+			&& (*line)[i] != '|' && (*line)[i] !='(' 
+			&& (*line)[i] != '&' && (*line)[i] != ')'
+			&& (*line)[i] != '\0' && !ft_isblank((*line)[i]))
 			i++;
-	str = malloc(i + 2);
+	str = malloc(i + 1);
 	if (!str)
 		return (NULL);
-	while (*line != '\'' && *line != '"'
-			&& *line != '|' && *line !='(' 
-			&& *line != '&' && *line != ')'
-			&& *line != '\0' && !ft_isblank(*line))
-		str[i++] = *line;
+	i = 0;
+	while (*line && **line && **line != '\'' && **line != '"'
+			&& **line != '|' && **line !='(' 
+			&& **line != '&' && **line != ')'
+			&& **line != '\0' && !ft_isblank(**line))
+		{
+			str[i] = **line;
+			i++;
+			(*line)++;
+		}
 	str[i] = '\0';
 	return (str);
 }
 
-t_string	*split_logical(char *line, int i, t_string *new)
+t_string	*create_outred_struct(char **line, t_string *new)
 {
-	if (*line == '\'' || *line == '"')
+	if (*line && !ft_strncmp(*line, ">>", 2))
 	{
-		new->string = copy_str(line, '\'', NULL);
-		new->type = COMMENT; 
+		new->string = ft_strdup(">>\0");
+		new->type = OUT_REDIR_APPEND;
+		*line = *line + 2; 
 	}
-	else if (*line == '"')
+	else if (*line && **line && **line == '>')
 	{
-		new->string = copy_str(line + i, '"', NULL);
-		new->type = COMMENT_APPEND;
+		new->string = ft_strdup(">\0");
+		new->type = OUT_REDIR;
+		*line = *line + 1;
 	}
-	else if (*line == '|' || *line == '(' || *line == '&' || *line == ')')
-		new = find_expression(new, line);
 	else
 	{
-		new->string = copy_line(line, 0, NULL);
-		new->type = CMD_LINE;
+		new->type = COMMENT;
+		if (**line != '\'')
+			new->type = COMMENT_APPEND;
+		new->string = copy_token(line, NULL);
 	}
-	if (ft_isblank(*line))
+	return (new);
+}
+
+t_string	*create_string_struct(char **line, t_string *new)
+{
+	// if (*line && **line && **line == '\'')
+	// {
+	// 	new->string = copy_quote(line, '\'', NULL);
+	// 	new->type = COMMENT; 
+	// }
+	// else if (*line && **line && **line == '"')
+	// {
+	// 	new->string = copy_quote(line, '"', NULL);
+	// 	new->type = COMMENT_APPEND;
+	// }
+	if (*line && **line && !ft_strncmp(*line, "<<", 2))
+	{
+		new->string = ft_strdup("<<\0");
+		new->type = HERE_DOC;
+		*line = *line + 2;
+	}
+	else if (*line && **line && **line == '<')
+	{
+		new->string = ft_strdup("<\0");
+		new->type = IN_REDIR;
+		*line = *line + 1;
+	}
+	else
+		new = create_outred_struct(line, new);
+	return (new);
+}
+
+t_string	*split_logical(char **line, t_string *new)
+{
+	if (*line && **line && ft_isblank(**line))
 		skip_blanks(line);	
+	if (*line && **line
+			&& (**line == '|' || **line == '(' || **line == '&' || **line == ')'))
+	{
+		new = find_expression(new, line);
+	}
+	else
+	{
+		new = create_string_struct(line, new);	
+	}
 	new->next = NULL;
+	new->prev = NULL;
+	if (*line && **line && ft_isblank(**line))
+		skip_blanks(line);	
 	return (new);
 }

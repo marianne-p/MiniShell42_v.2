@@ -33,9 +33,9 @@
 
 typedef enum e_nodes
 {
+	ERROR,
 	CMD,
-	CMD_LINE,
-	CUST_CMD,
+	CMD_CUST,
 	IN_REDIR,
 	HERE_DOC,
 	OUT_REDIR,
@@ -44,12 +44,20 @@ typedef enum e_nodes
 	COMMENT_APPEND,
 	FILE_STR,
 	PIPE,
-	STRING,
 	AND,
 	OR,
 	OPEN_BRACKET,
-	CLOSE_BRACKET
+	CLOSE_BRACKET,
+	STRING
 }	t_node_type;
+
+typedef enum e_redir_type
+{
+	I_INPUT,
+	O_OVERWRITE,
+	O_APPENDFILE,
+	I_HERE_DOC
+}	t_redir_type;
 
 typedef enum e_err
 {
@@ -63,6 +71,18 @@ typedef struct s_env
 	char	*value;
 }	t_env;
 
+/*
+* args[0] = File path for redirection,
+* args[1] = delim or NULL
+*/
+typedef struct s_redir
+{
+	t_redir_type	type;
+	char			*str;
+	int				fd;
+	struct s_redir	*next;
+}	t_redir;
+
 /* 
 *   type - CMD | CUST_CMD
 *   argv - command and arguments
@@ -70,32 +90,13 @@ typedef struct s_env
 */
 typedef struct s_cmd
 {
-	t_node_type	type;
-	char		**argv;
-	int			argc; //?
-	char		*full_path;
-	int			outfd;
-	int			infd;
-}	t_cmd;
-
-/*
-* args[0] = File path for redirection,
-* args[1] = delim or NULL
-*/
-typedef struct s_redir
-{
 	t_node_type		type;
-	char			**args;
-	int				fd; //?
-	struct s_redir	*next;
-}	t_redir;
-
-typedef struct s_node
-{
-	t_cmd			*cmd;
-	t_redir			*redir;
-	struct s_node	*next;
-}	t_node;
+	char			**argv;
+	int				argc; //?
+	char			*full_path;
+	struct s_redir	inred;
+	struct s_redir	outred;
+}	t_cmd;
 
 typedef struct s_string
 {
@@ -109,7 +110,8 @@ typedef struct s_ast
 {
 	t_node_type		type;
 	char			*string;
-	//t_node          *node;
+	t_cmd			*cmd;
+	bool			result;
 	struct s_ast	*top;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -119,11 +121,12 @@ typedef struct s_minish
 {
 	t_string		*tokens;
 	struct s_ast	*leaf;
-	//struct s_ev		*env;
 	//char			**envv;
+	t_list			*env;
 }	t_minish;
 
 
+char	*expand_line(char *line, t_minish *msh, int i);
 /*Tokenize*/
 /**
  * @brief Creates double linked list of tokens
@@ -132,16 +135,34 @@ typedef struct s_minish
  */
 t_string	*tokenize(char *line);
 
+
+/**
+ * @brief executes the line provided as argument (argv) input to minishell
+ * 			For example, ./minishell ls || echo "fail"
+ * @return head of the linked list with t_string * tokens
+ */
+t_string	*tokenize_oneline(char *final_str);
+
+/**
+ * @brief checks the token type ()
+ */
+t_node_type find_token_type(char *token);
+
 /**
  * @brief Splits the line into tokens which 
  * influence the tree logic, including |, ||, &&, ()
  * @param line Input line
- * @param start pointer to start
- * @param i - 0
  * @param new allocated t_string
  * @return Head of the linked list, or NULL
  */
-t_string	*split_logical(char *line, int i, t_string *new);
+t_string	*split_logical(char **line, t_string *new);
+
+/**
+ * @brief Creates a cmd_node inside t_string of type CMD,
+ * 		which prerares command for execution: splits redir, cmd, args 
+ * 		and checks their validity
+ *  
+ */
 
 /**
  * Frees (char *)string AND linked list (t_string *)tokens
@@ -149,7 +170,7 @@ t_string	*split_logical(char *line, int i, t_string *new);
  */
 void		free_tokens(t_string *tokens);
 // t_ast		*parse(t_string *tokens);
-// void		free_split(char **str);
+void		free_split(char **str);
 
 /**
 * @brief Printing path of current working directory
@@ -213,6 +234,7 @@ t_env		*ft_get_env(t_list *lst, char *key);
  * Return NULL if enviroment variable with 'key' does not exist
  */
 t_list		*ft_get_env_node(t_list *lst, char *key);
+
 /**
  * @brief Print enviroment variables to standart output
  * @param lst List of enviroment variables
@@ -234,19 +256,5 @@ char		**split_path(t_list *lst, char *key, char c);
  * @param env t_env pointer
  */
 void		free_env(void *env);
-
-/*Built-ins*/
-// void	exec_builtin(t_node *node, t_minish **msh_ptr);
-// int		exec_exit(t_node *node, t_minish **msh_ptr);
-// void	ft_pwd(void);
-// int		ft_cd(char *path);
-// int		ft_echo(char **cmd);
-// void	ft_exit(char *str, t_minish **msh_ptr, int ret, void *temp);
-// int		ft_export(char **av, t_envv **head);
-// void	print_all_envv(t_envv *head);
-// void	free_envv(t_envv **node);
-// void	ft_addenvv(t_envv **env_ptr, char *sngl, t_envv *new);
-// int		ft_unset(char *key, t_envv **head);
-// void	ft_env(t_minish *minish);
 
 #endif
