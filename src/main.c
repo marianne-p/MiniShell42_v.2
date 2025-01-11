@@ -132,7 +132,7 @@ void    msh_loop(t_minish **msh)
 			}
 			// free_tokens((*msh)->tokens);
 			/*PARSING*/
-            // msh->leaf = parse(msh->tokens);
+            (*msh)->leaf = parse((*msh)->tokens);
             // exec_ast(msh->leaf, msh);
             // free_ast(&(msh->leaf));
         }
@@ -156,7 +156,8 @@ int main(int argc, char **argv, char **env)
 		perror("Env initialization failed\n");
 	if (!isatty(STDIN_FILENO))
 		handle_oneline(&msh);
-    msh_loop(&msh);
+	else
+		msh_loop(&msh);
     free(msh);
     return (0);
 }
