@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:15:16 by ogrativ           #+#    #+#             */
-/*   Updated: 2024/12/13 12:41:51 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/01/13 19:37:46 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	ft_set_env(t_list **lst, char	*env)
 
 	i = 0;
 	if (env == NULL)
+		return (-1);
+	if (!ft_isalpha(env[0]) && !env[0] == '_')
 		return (-1);
 	tmp = ft_split(env, ' ');
 	if (tmp == NULL)
