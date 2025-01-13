@@ -76,13 +76,13 @@ char	*copy_token(char **line, char *str)
 	i = 0;
 	if (ft_isblank(**line))
 		skip_blanks(line);	
-	printf("CHARs checked:\n");
+	// printf("CHARs checked:\n");
 	while (*line && (*line)[i] && !ft_isblank((*line)[i])
 			&& (*line)[i] != '|' && (*line)[i] !='(' 
 			&& (*line)[i] != '&' && (*line)[i] != ')'
 			&& (*line)[i] != '\0')
 		{
-			printf("%c,", (*line)[i]);
+			// printf("%c,", (*line)[i]);
 			if ((*line)[i] == '\'')
 			{
 				i++;
@@ -99,7 +99,7 @@ char	*copy_token(char **line, char *str)
 			}
 			else
 			{
-				printf("\nOTHER CHAR: %c\n", (*line)[i]);
+				// printf("\nOTHER CHAR: %c\n", (*line)[i]);
 				i++;
 			}
 		}
