@@ -13,20 +13,20 @@ void   free_ast(t_ast **leaf)
     *leaf = NULL;
 }
 
-void	free_list(t_cmd *list)
+void	free_list(t_cmd **list)
 {
-	t_cmd	*end;
+	// t_cmd	*end;
 	t_cmd	*tmp;
 
-	tmp = list;
-	end = list->prev;
-	while (list->next != NULL)
+	tmp = *list;
+	// end = (*list)->prev;
+	while ((*list)->next != NULL)
 	{
-		tmp = list->next;
-		free_split(list->argv);
-		free(list);
-		list = NULL;
-		list = tmp;
+		tmp = (*list)->next;
+		free_split((*list)->argv);
+		free(*list);
+		*list = NULL;
+		*list = tmp;
 	}
 }
 
@@ -115,14 +115,13 @@ void	handle_oneline(t_minish **msh)
 	// line = expand_line(final_str, *msh, 0);
 	// fprintf(stderr, "AFTER: %s\n", line);
 	(*msh)->tokens = tokenize_oneline(final_str);
+    if ((*msh)->tokens != NULL)
+		print_tokens((*msh)->tokens);
     (*msh)->list = parse((*msh)->tokens, 0);
     if ((*msh)->tokens != NULL)
-	{
-		// print_tokens((*msh)->tokens);
 		free_tokens((*msh)->tokens);
-	}
 	if ((*msh)->list != NULL)
-		free_cmds((*msh)->list);
+		free_list(&((*msh)->list));
 	exit(0);
 }
 
@@ -140,21 +139,16 @@ void    msh_loop(t_minish **msh)
         if (*line)
         {
             add_history(line);
-			// fprintf(stderr, "BEFORE: %s\n", line);
-			// line = expand_line(line, *msh, 0);
-			// fprintf(stderr, "AFTER: %s\n", line);
 			/*TOKENS STAGE*/
 			(*msh)->tokens = tokenize(line);
-    					// free_tokens((*msh)->tokens);
+            if ((*msh)->tokens != NULL)
+				print_tokens((*msh)->tokens);
 			/*PARSING*/
             (*msh)->list = parse((*msh)->tokens, 0);
             if ((*msh)->tokens != NULL)
-			{
-				// print_tokens((*msh)->tokens);
 				free_tokens((*msh)->tokens);
-			}
 			if ((*msh)->list != NULL)
-				free_cmds((*msh)->list);
+				free_list(&((*msh)->list));
 			// exec_ast(msh->leaf, msh);
             // free_ast(&(msh->leaf));
         }

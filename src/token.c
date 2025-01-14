@@ -46,8 +46,8 @@ t_string    *tokenize(char *line)
         tmp = new;
         if (!start)
             start = new;
-		if (new->prev && new->prev->type == HERE_DOC)
-			new->type = COMMENT;
+		// if (new->prev && new->prev->type == HERE_DOC)
+		// 	new->type = COMMENT;
 
 	}
 	free(line_start);

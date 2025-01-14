@@ -17,10 +17,10 @@ void	populate_command(t_string *cmd_start, t_string *tokens, t_cmd **tmp)
 	int	i;
 
 	i = 0;
-	while (cmd_start != tokens->next || cmd_start->type != PIPE)
+	while (cmd_start != tokens->next && cmd_start->type != PIPE)
 	{
-		if (tokens->type != OUT_REDIR && tokens->type != OUT_REDIR_APPEND
-			&& tokens->type != HERE_DOC && tokens->type != IN_REDIR)
+		if (cmd_start->type != OUT_REDIR && cmd_start->type != OUT_REDIR_APPEND
+			&& cmd_start->type != HERE_DOC && cmd_start->type != IN_REDIR)
 		{
 			((*tmp)->argv)[i++] = ft_strdup(cmd_start->string);
 		}
@@ -68,15 +68,23 @@ t_cmd	*parse(t_string *tokens, int i)
 	t_cmd		*tmp;
 
 	tok_head = tokens;
+	head = NULL;
+	prev = NULL;
+	tmp = NULL; 
 	while (i == 0 || tokens != tok_head)
 	{
 		cmd_start = tokens;
 		i = find_cmd_end(&tokens, tok_head, i);
 		if (tmp)
 			prev = tmp;
-		tmp = malloc(sizeof(t_cmd));
+		tmp = (t_cmd *)malloc(sizeof(t_cmd));
 		tmp->inred = NULL;
 		tmp->outred = NULL;
+		if (prev)
+		{
+			tmp->prev = prev;
+			prev->next = tmp;
+		}
 		tmp->argc = i;
 		tmp->argv = (char **)malloc(sizeof(char *) * (i + 1));
 		if (!head)

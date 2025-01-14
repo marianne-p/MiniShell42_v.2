@@ -201,15 +201,15 @@ t_string	*create_outred_struct(char **line, t_string *new)
 {
 	if (*line && !ft_strncmp(*line, ">>", 2))
 	{
-		new->string = ft_strdup(">>\0");
+		*line = *line + 2;
+		new->string = copy_token(line, NULL);
 		new->type = OUT_REDIR_APPEND;
-		*line = *line + 2; 
 	}
 	else if (*line && **line && **line == '>')
 	{
-		new->string = ft_strdup(">\0");
-		new->type = OUT_REDIR;
 		*line = *line + 1;
+		new->string = copy_token(line, NULL);
+		new->type = OUT_REDIR;
 	}
 	else
 	{
@@ -223,27 +223,17 @@ t_string	*create_outred_struct(char **line, t_string *new)
 
 t_string	*create_string_struct(char **line, t_string *new)
 {
-	// if (*line && **line && **line == '\'')
-	// {
-	// 	new->string = copy_quote(line, '\'', NULL);
-	// 	new->type = COMMENT; 
-	// }
-	// else if (*line && **line && **line == '"')
-	// {
-	// 	new->string = copy_quote(line, '"', NULL);
-	// 	new->type = COMMENT_APPEND;
-	// }
 	if (*line && **line && !ft_strncmp(*line, "<<", 2))
 	{
-		new->string = ft_strdup("<<\0");
-		new->type = HERE_DOC;
 		*line = *line + 2;
+		new->string = copy_token(line, NULL);
+		new->type = HERE_DOC;
 	}
 	else if (*line && **line && **line == '<')
 	{
-		new->string = ft_strdup("<\0");
-		new->type = IN_REDIR;
 		*line = *line + 1;
+		new->string = copy_token(line, NULL);
+		new->type = IN_REDIR;
 	}
 	else
 		new = create_outred_struct(line, new);
