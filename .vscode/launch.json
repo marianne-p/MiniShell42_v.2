@@ -8,7 +8,7 @@
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "/home/mpihur/Dec_24/MiniShell42_v.2/minishell",
+			"program": "/home/mpihur/25Jan/MiniShell42_v.2/minishell",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",

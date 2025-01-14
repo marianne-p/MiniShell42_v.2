@@ -20,7 +20,7 @@ ALL_EXPANSION_TEST_COMMANDS=(
   "echo \$\$" # PID expansion
   "echo \$?" # Exit status of the last command
   "echo \$0" # Shell script name or shell identifier
-  "echo '\$\"'\$'" # Mixing quotes with special characters
+  "echo '\$\''\$'" # Mixing quotes with special characters
   "echo \$((3 + 5))" # Arithmetic expansion (if supported)
   "echo \$HOME/test" # Path expansion with a variable
 )
@@ -78,7 +78,7 @@ echo "=========================="
 
 i=1
 
-for CMD in "${EXPANSION_TEST_COMMANDS[@]}"; do
+for CMD in "${ALL_EXPANSION_TEST_COMMANDS[@]}"; do
   echo
   echo "Test $i, Command: $CMD"
   echo "--------------------------"

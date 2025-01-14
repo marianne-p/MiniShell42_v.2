@@ -54,9 +54,9 @@ typedef enum e_nodes
 typedef enum e_redir_type
 {
 	I_INPUT,
-	O_OVERWRITE,
-	O_APPENDFILE,
-	I_HERE_DOC
+	I_HEREDOC,
+	O_OVERWR,
+	O_APPENDF,
 }	t_redir_type;
 
 typedef enum e_err
@@ -90,12 +90,14 @@ typedef struct s_redir
 */
 typedef struct s_cmd
 {
-	t_node_type		type;
+	// t_node_type		type;
 	char			**argv;
 	int				argc; //?
-	char			*full_path;
-	struct s_redir	inred;
-	struct s_redir	outred;
+	// char			*full_path;
+	struct s_redir	*inred;
+	struct s_redir	*outred;
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
 }	t_cmd;
 
 typedef struct s_string
@@ -121,6 +123,7 @@ typedef struct s_minish
 {
 	t_string		*tokens;
 	struct s_ast	*leaf;
+	struct s_cmd	*list;
 	//char			**envv;
 	t_list			*env;
 }	t_minish;
@@ -176,6 +179,15 @@ void		free_split(char **str);
 * @brief Printing path of current working directory
 * @return Return 0 if succes, -1 for error
 */
+
+/**
+ * @brief creates a linked list of cmds with outred and inred inside struct
+ * 
+ * @param tokens double-linked list of the tokens
+ * @return double-linked list of commands
+ */
+t_cmd	*parse(t_string *tokens, int i);
+
 int			printpwd(void);
 
 /**
