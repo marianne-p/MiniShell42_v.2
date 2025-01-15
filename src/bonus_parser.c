@@ -3,11 +3,9 @@
 void    free_tokens(t_string *tokens)
 {
 	t_string    *tmp;
-	t_string	*start;
 
-	if (tokens && tokens->prev != NULL)
+	if (tokens)
 	{
-		start = tokens->prev;
 		while (tokens)
 		{
 			tmp = tokens;
@@ -16,19 +14,7 @@ void    free_tokens(t_string *tokens)
 			free(tmp->string);
 			free(tmp);
 			tmp = NULL;
-			if (tokens == start)
-			{
-				// fprintf(stderr, "Deleting start '%s'\n", start->string);
-				free (start->string);
-				free (start);
-				break ;
-			}
 		}
-	}
-	else if (tokens)
-	{
-		free(tokens->string);
-		free(tokens);
 	}
 }
 

@@ -2,7 +2,9 @@
 
 int	find_cmd_end(t_string **tokens, t_string *head, int i)
 {
-	while ((i == 0 || *tokens != head) && (*tokens)->type != PIPE)
+	(void)head;
+	i = 0;
+	while (*tokens && (*tokens)->type != PIPE)
 	{
 		if ((*tokens)->type != OUT_REDIR && (*tokens)->type != OUT_REDIR_APPEND
 			&& (*tokens)->type != HERE_DOC && (*tokens)->type != IN_REDIR)
@@ -16,8 +18,9 @@ void	populate_command(t_string *cmd_start, t_string *tokens, t_cmd **tmp)
 {
 	int	i;
 
+	(void)tokens;
 	i = 0;
-	while (cmd_start != tokens->next && cmd_start->type != PIPE)
+	while (cmd_start && cmd_start->type != PIPE)
 	{
 		if (cmd_start->type != OUT_REDIR && cmd_start->type != OUT_REDIR_APPEND
 			&& cmd_start->type != HERE_DOC && cmd_start->type != IN_REDIR)
@@ -26,13 +29,14 @@ void	populate_command(t_string *cmd_start, t_string *tokens, t_cmd **tmp)
 		}
 		cmd_start = cmd_start->next;
 	}
+	(*tmp)->argv[i] = NULL;
 }
 
 void	print_red(t_redir *red)
 {
 	while (red != NULL)
 	{
-		printf("'%s' ", red->str);
+		fprintf(stderr, "'%s' ", red->str);
 		red = red->next;
 	}
 }
@@ -40,22 +44,23 @@ void	print_red(t_redir *red)
 void	print_parsed(t_cmd *head, t_cmd *current, int i)
 {
 	current = head;
-	while (i == 0 || current != head)
+	while (i == 0 || (current && current != head))
 	{
-		i = 0;
-		printf("cmd: '%s'	", current->argv[i]);
-		while (current->argv[++i] != NULL)
-			printf("'%s' ", current->argv[i]);
+		i = 1;
+		fprintf(stderr, "\ncmd: '%s'	", current->argv[0]);
+		while (current->argv && current->argv[i])
+			fprintf(stderr, "'%s' ", current->argv[i++]);
 		if (current->inred)
 		{
-			printf("	inred: ");
+			fprintf(stderr, "\n		inred: ");
 			print_red(current->inred);
 		}
 		if (current->outred)
 		{
-			printf("	outred: ");
+			fprintf(stderr, "\n		outred: ");
 			print_red(current->outred);
 		}
+		current = current->next;
 	}
 }
 
@@ -71,26 +76,29 @@ t_cmd	*parse(t_string *tokens, int i)
 	head = NULL;
 	prev = NULL;
 	tmp = NULL; 
-	while (i == 0 || tokens != tok_head)
+	while (i == 0 || (tokens && tokens != tok_head))
 	{
-		cmd_start = tokens;
-		i = find_cmd_end(&tokens, tok_head, i);
 		if (tmp)
 			prev = tmp;
+		if (tokens->type == PIPE && prev)
+			tokens = tokens->next;
+		cmd_start = tokens;
+		i = find_cmd_end(&tokens, tok_head, i);
 		tmp = (t_cmd *)malloc(sizeof(t_cmd));
-		tmp->inred = NULL;
-		tmp->outred = NULL;
+		tmp->inred = create_inred_list(cmd_start);
+		tmp->outred = create_outred_list(cmd_start);
+		tmp->prev = NULL;
+		tmp->next = NULL;
+		tmp->argc = i;
+		tmp->argv = (char **)malloc(sizeof(char *) * (i + 1));
+		populate_command(cmd_start, tokens, &tmp);
 		if (prev)
 		{
 			tmp->prev = prev;
 			prev->next = tmp;
 		}
-		tmp->argc = i;
-		tmp->argv = (char **)malloc(sizeof(char *) * (i + 1));
 		if (!head)
 			head = tmp;
-		tmp->prev = tmp;
-		populate_command(cmd_start, tokens, &tmp);
 	}	
 	print_parsed(head, head, 0);
 	return (head);

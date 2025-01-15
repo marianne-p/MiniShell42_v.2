@@ -35,20 +35,17 @@ t_string    *tokenize(char *line)
 			new = NULL;
 			continue ;
 		}
-        if (!*line_cpy && start)
-        {
-			start->prev = new;
-            new->next = start;
-        }
+        // if (!*line_cpy && start)
+        // {
+		// 	start->prev = new;
+        //     new->next = start;
+        // }
         new->prev = tmp;
         if (tmp)
             tmp->next = new;
         tmp = new;
         if (!start)
             start = new;
-		// if (new->prev && new->prev->type == HERE_DOC)
-		// 	new->type = COMMENT;
-
 	}
 	free(line_start);
     // free_split(tmp_str);
