@@ -174,6 +174,8 @@ t_string	*split_logical(char **line, t_string *new);
  */
 void		free_tokens(t_string *tokens);
 // t_ast		*parse(t_string *tokens);
+void		free_list(t_cmd **list);
+// void   free_ast(t_ast **leaf)
 void		free_split(char **str);
 
 /**
@@ -188,6 +190,8 @@ void		free_split(char **str);
  * @return double-linked list of commands
  */
 t_cmd	*parse(t_string *tokens, int i);
+t_redir	*create_inred_list(t_string *cmd_start);
+t_redir	*create_outred_list(t_string *cmd_start);
 
 int			printpwd(void);
 

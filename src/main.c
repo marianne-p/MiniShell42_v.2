@@ -1,33 +1,3 @@
-#include "../include/minishell.h"
-
-void   free_ast(t_ast **leaf)
-{
-    if (!*leaf)
-        return ;
-    if ((*leaf)->left)
-        free_ast(&((*leaf)->left));
-    if ((*leaf)->right)
-        free_ast(&((*leaf)->right));
-    free((*leaf)->string);
-    free(*leaf);
-    *leaf = NULL;
-}
-
-void	free_list(t_cmd **list)
-{
-	t_cmd	*tmp;
-
-	tmp = *list;
-	while ((*list) != NULL)
-	{
-		tmp = (*list)->next;
-		free_split((*list)->argv);
-		free(*list);
-		*list = NULL;
-		*list = tmp;
-	}
-}
-
 #include <stdio.h>
 #include "../include/minishell.h"
 
@@ -128,7 +98,7 @@ void    msh_loop(t_minish **msh)
     char    *line;
     char    *prompt;
 
-    prompt = "minishell$ ";
+    prompt = "\nminishell$ ";
     while (1)
     {
         line = readline(prompt);
@@ -138,10 +108,23 @@ void    msh_loop(t_minish **msh)
         {
             add_history(line);
 			/*TOKENS STAGE*/
+			if (verify_quotes(line) > 0)
+			{
+				free (line);
+				free (*msh);
+				exit (1);
+			}
 			(*msh)->tokens = tokenize(line);
             if ((*msh)->tokens != NULL)
 				print_tokens((*msh)->tokens);
 			/*PARSING*/
+			if (verify_pipes((*msh)->tokens) > 0)
+			{
+				free(line);
+				free_tokens((*msh)->tokens);
+				free(*msh);
+				exit(1);
+			}
             (*msh)->list = parse((*msh)->tokens, 0);
             if ((*msh)->tokens != NULL)
 				free_tokens((*msh)->tokens);
@@ -160,14 +143,15 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+	(void)env;
     msh = (t_minish *)malloc(sizeof(t_minish));
     if (!msh)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
 	msh->env = NULL;
-	if (init_env(&(msh->env), env) < 0)
-		perror("Env initialization failed\n");
+	// if (init_env(&(msh->env), env) < 0)
+	// 	perror("Env initialization failed\n");
 	if (!isatty(STDIN_FILENO))
 		handle_oneline(&msh);
 	else

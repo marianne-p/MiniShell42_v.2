@@ -71,6 +71,37 @@ TEST_COMMANDS=(
 
 TEST_COMMANDS+=("${EXPANSION_TEST_COMMANDS[@]}")
 
+BASE_TEST_COMMANDS=(
+  ""
+  "ls"
+  "ls|ls"
+  "ls | ls"
+  "   echo 'leading spaces test'"
+  "echo 'trailing spaces test'   "
+  "echo     too     many     spaces"
+  "ls>out.txt"
+  "ls > out.txt"
+  "echo 'appending'>>out.txt"
+  "echo 'appending with space' >> out.txt"
+  "cat <<EOF | grep hello && echo 'Done'"
+  "echo \"quoted #comment\" | cat"
+  "ls | grep src | wc -l"
+  "grep 'pattern' < in.txt"
+  "grep 'pattern' < in.txt > out.txt"
+  "grep 'pattern' < in.txt >> out.txt"
+  "echo \"double quotes with spaces\" | wc -w"
+  "echo 'single quotes with spaces' | wc -w"
+  "cat <<EOF | grep 'invalid"
+  "ls | | wc -l" #invalid
+  ">> out.txt echo invalid"
+  "| ls" #invalid input
+  "ls |" #invalid
+  "ls >>" #invalid
+  "cat <<EOF && echo done"
+  "echo \"quotes within \\\"quotes\\\"\""
+)
+
+
 # Print header
 echo "=========================="
 echo "      Minishell Tests     "
@@ -78,7 +109,7 @@ echo "=========================="
 
 i=1
 
-for CMD in "${ALL_EXPANSION_TEST_COMMANDS[@]}"; do
+for CMD in "${BASE_TEST_COMMANDS[@]}"; do
   echo
   echo "Test $i, Command: $CMD"
   echo "--------------------------"
