@@ -92,7 +92,8 @@ typedef struct s_cmd
 {
 	// t_node_type		type;
 	char			**argv;
-	int				argc; //?
+	int				argc;
+	int				pipe[2];
 	// char			*full_path;
 	struct s_redir	*inred;
 	struct s_redir	*outred;

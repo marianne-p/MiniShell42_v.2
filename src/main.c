@@ -15,12 +15,10 @@ void   free_ast(t_ast **leaf)
 
 void	free_list(t_cmd **list)
 {
-	// t_cmd	*end;
 	t_cmd	*tmp;
 
 	tmp = *list;
-	// end = (*list)->prev;
-	while ((*list)->next != NULL)
+	while ((*list) != NULL)
 	{
 		tmp = (*list)->next;
 		free_split((*list)->argv);
