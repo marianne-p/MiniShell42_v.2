@@ -79,12 +79,21 @@ void	handle_oneline(t_minish **msh)
 		if (!final_str)
 			return ;
 	}
-	// fprintf(stderr, "BEFORE: %s\n", final_str);
-	// line = expand_line(final_str, *msh, 0);
-	// fprintf(stderr, "AFTER: %s\n", line);
+	if (verify_quotes(final_str) > 0)
+	{
+		free (final_str);
+		free (*msh);
+		exit (1);
+	}
 	(*msh)->tokens = tokenize_oneline(final_str);
     if ((*msh)->tokens != NULL)
 		print_tokens((*msh)->tokens);
+	if (verify_pipes((*msh)->tokens) > 0)
+	{
+		free_tokens((*msh)->tokens);
+		free(*msh);
+		exit(1);
+	}
     (*msh)->list = parse((*msh)->tokens, 0);
     if ((*msh)->tokens != NULL)
 		free_tokens((*msh)->tokens);

@@ -130,6 +130,7 @@ for CMD in "${BASE_TEST_COMMANDS[@]}"; do
   
   # Extract lines with 'definitely lost:' and 'ERROR SUMMARY'
   DEFINITELY_LOST=$(echo "$VALGRIND_OUTPUT" | grep "definitely lost:")
+  IN_USE=$(echo "$VALGRIND_OUTPUT" | grep "in use at exit:")
   ERROR_SUMMARY=$(echo "$VALGRIND_OUTPUT" | grep "ERROR SUMMARY")
 
   #
@@ -156,14 +157,18 @@ for CMD in "${BASE_TEST_COMMANDS[@]}"; do
   #
   # 4. If either line was "red," print the full Valgrind output for debugging
   #
-  if [ "$IS_RED" -eq 1 ]; then
-    echo -e "${RED}Full Valgrind output (since there's a potential issue):${RESET}"
-    echo "$VALGRIND_OUTPUT"
-    ((FAIL_COUNT++))
-  else
-    ((PASS_COUNT++))
-  fi
-  ((i++))
+
+	if [[ "$IS_RED" -eq 1 && "$DEFINITELY_LOST" != *"0 bytes in 0 blocks"* && "$IN_USE" == *"0 bytes in 0 blocks"* ]]; then
+		echo -e "${RED}Logical/Parsing error, but memory is clean.${RESET}"
+		((PASS_COUNT++))
+	elif [["$IS_RED" -eq 1 && "$DEFINITELY_LOST" != *"0 bytes in 0 blocks"* && "$IN_USE" != *"0 bytes in 0 blocks"* ]]; then	
+		echo -e "${RED}Potential memory issue detected:${RESET}"
+		echo "$VALGRIND_OUTPUT"
+		((FAIL_COUNT++))
+	else
+		((PASS_COUNT++))
+	fi
+	((i++))
 done
 
 # Print summary

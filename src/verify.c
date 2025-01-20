@@ -2,12 +2,12 @@
 
 int	quote_helper(char *line, int *i)
 {
-	if (line[*i] == '\'')
+	if (line[*i] && line[*i] == '\'')
 	{
 		(*i)++;
-		while (line[*i] != '\'')
+		while (line[*i] && line[*i] != '\'')
 			(*i)++;
-		if (line[*i] == '\'')
+		if (line[*i] && line[*i] == '\'')
 			(*i)++;
 		else
 		{
@@ -15,6 +15,7 @@ int	quote_helper(char *line, int *i)
 			return (2);
 		}
 	}
+	(*i)++;
 	return (0);
 }
 
@@ -25,12 +26,12 @@ int	verify_quotes(char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '"')
+		if (line[i] && line[i] == '"')
 		{
 			i++;
-			while (line[i] != '"')
+			while (line[i] && line[i] != '"')
 				i++;
-			if (line[i] == '"')
+			if (line[i] && line[i] == '"')
 				i++;
 			else
 			{
@@ -62,18 +63,24 @@ int	verify_pipes(t_string *tokens)
 				ft_putstr_fd("Wrong pipe/command pattern\n", STDERR_FILENO);
 				return (1);
 			}
-			while (tokens->type != PIPE)
+			while (tokens && tokens->type != PIPE)
 				tokens = tokens->next;
 		}
-		if (tokens->type == PIPE)
+		if (tokens && tokens->type == PIPE)
 		{
 			pipe++;
+			tokens = tokens->next;
 			if (cmd - pipe > 1 || pipe - cmd > 0)
 			{
 				ft_putstr_fd("Wrong pipe/cmd pattern\n", STDERR_FILENO);
 				return (2);
 			}
 		}
+	}
+	if (cmd - pipe != 1)
+	{
+		ft_putstr_fd("Wrong pipe/cmd number\n", STDERR_FILENO);
+		return(3);
 	}
 	return (0);
 }
