@@ -1,6 +1,3 @@
-#include "../include/minishell.h"
-
-
 #include <stdio.h>
 #include "../include/minishell.h"
 
