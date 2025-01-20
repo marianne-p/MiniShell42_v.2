@@ -137,6 +137,9 @@ char	*expand_line(char *line, t_minish *msh, int i);
  * @return 
  */
 t_string	*tokenize(char *line);
+int	verify_pipes(t_string *tokens);
+
+int	verify_quotes(char *line);
 
 
 /**

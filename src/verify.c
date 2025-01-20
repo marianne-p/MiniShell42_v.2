@@ -11,7 +11,7 @@ int	quote_helper(char *line, int *i)
 			(*i)++;
 		else
 		{
-			ft_putstr_fd("The matching quote (') is missing");
+			ft_putstr_fd("The matching quote (') is missing", STDERR_FILENO);
 			return (2);
 		}
 	}
@@ -34,7 +34,7 @@ int	verify_quotes(char *line)
 				i++;
 			else
 			{
-				ft_putstr_fd("The matching quote (\") is missing");
+				ft_putstr_fd("The matching quote (\") is missing", STDERR_FILENO);
 				return (1);
 			}
 		}
@@ -48,8 +48,10 @@ int	verify_pipes(t_string *tokens)
 {
 	int	cmd;
 	int	pipe;
-	t_string	*tmp;
+	// t_string	*tmp;
 
+	cmd = 0;
+	pipe = 0;
 	while (tokens != NULL)
 	{
 		if (tokens->type != PIPE)
@@ -57,7 +59,7 @@ int	verify_pipes(t_string *tokens)
 			cmd++;
 			if (cmd - pipe > 1 || pipe - cmd > 0)
 			{
-				ft_putstr_fd("Wrong pipe/command pattern\n", stderr);
+				ft_putstr_fd("Wrong pipe/command pattern\n", STDERR_FILENO);
 				return (1);
 			}
 			while (tokens->type != PIPE)
@@ -68,7 +70,7 @@ int	verify_pipes(t_string *tokens)
 			pipe++;
 			if (cmd - pipe > 1 || pipe - cmd > 0)
 			{
-				ft_putstr_fd("Wrong pipe/cmd pattern\n", stderr);
+				ft_putstr_fd("Wrong pipe/cmd pattern\n", STDERR_FILENO);
 				return (2);
 			}
 		}
