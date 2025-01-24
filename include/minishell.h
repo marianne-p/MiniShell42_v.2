@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2024/12/14 15:58:10 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/01/24 17:30:21 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,37 @@ int	verify_pipes(t_string *tokens);
 
 int	verify_quotes(char *line);
 
+/**
+ * @brief Processes the input string, expanding environment variables, handling
+ * 	quotes, and resolving escape sequences.
+ *
+ * This function scans the input string for environment variable references
+ * (e.g., `$USER`, `${USER}`), quotes (single and double), and escape sequences
+ * (e.g., `\$` for a literal `$`), and generates a processed output string with
+ * all substitutions and resolutions applied. The environment variable
+ * values are retrieved from the provided linked list `lst`.
+ *
+ * @param input The input string containing potential environment variable
+ * 	references, quotes, and escape sequences.
+ * @param lst A linked list of environment variables, where each node
+ * 	represents a name-value pair.
+ * @return A dynamically allocated string containing the processed output with
+ * 	all substitutions applied. The caller is responsible for freeing the
+ *	returned string. Returns `NULL` if an error occurs, such as unsupported
+ *	syntax or memory allocation failure.
+ * @note This function supports both single quotes (which prevent variable
+ * 	expansion) and double quotes (which allow variable expansion).
+ * 	If unsupported syntax is encountered (e.g., nested variables 
+ *	like `${$USER}`), the function returns `NULL`.
+ * @example // Example usage:
+ * t_list *env_list = initialize_env_list();
+ * char *result = process_env("Hello, $USER!", env_list);
+ * printf("%s\n", result); // Output: "Hello, ogrativ!" (assuming USER=ogrativ)
+ * free(result);
+ */
+char	*process_env(const char *input, t_list *lst);
+
+char	*get_env_value(const char *var_name, t_list *lst);
 
 /**
  * @brief executes the line provided as argument (argv) input to minishell
