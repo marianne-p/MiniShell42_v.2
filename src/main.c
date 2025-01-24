@@ -1,18 +1,3 @@
-#include "../include/minishell.h"
-
-void   free_ast(t_ast **leaf)
-{
-    if (!*leaf)
-        return ;
-    if ((*leaf)->left)
-        free_ast(&((*leaf)->left));
-    if ((*leaf)->right)
-        free_ast(&((*leaf)->right));
-    free((*leaf)->string);
-    free(*leaf);
-    *leaf = NULL;
-}
-
 #include <stdio.h>
 #include "../include/minishell.h"
 
@@ -94,15 +79,26 @@ void	handle_oneline(t_minish **msh)
 		if (!final_str)
 			return ;
 	}
-	fprintf(stderr, "BEFORE: %s\n", final_str);
-	line = expand_line(final_str, *msh, 0);
-	fprintf(stderr, "AFTER: %s\n", line);
-	// (*msh)->tokens = tokenize_oneline();
-	// if ((*msh)->tokens != NULL)
-	// {
-	// 	print_tokens((*msh)->tokens);
-	// 	free_tokens((*msh)->tokens);
-	// }
+	if (verify_quotes(final_str) > 0)
+	{
+		free (final_str);
+		free (*msh);
+		exit (1);
+	}
+	(*msh)->tokens = tokenize_oneline(final_str);
+    if ((*msh)->tokens != NULL)
+		print_tokens((*msh)->tokens);
+	if (verify_pipes((*msh)->tokens) > 0)
+	{
+		free_tokens((*msh)->tokens);
+		free(*msh);
+		exit(1);
+	}
+    (*msh)->list = parse((*msh)->tokens, 0);
+    if ((*msh)->tokens != NULL)
+		free_tokens((*msh)->tokens);
+	if ((*msh)->list != NULL)
+		free_list(&((*msh)->list));
 	exit(0);
 }
 
@@ -111,7 +107,7 @@ void    msh_loop(t_minish **msh)
     char    *line;
     char    *prompt;
 
-    prompt = "minishell$ ";
+    prompt = "\nminishell$ ";
     while (1)
     {
         line = readline(prompt);
@@ -120,20 +116,30 @@ void    msh_loop(t_minish **msh)
         if (*line)
         {
             add_history(line);
-			fprintf(stderr, "BEFORE: %s\n", line);
-			line = expand_line(line, *msh, 0);
-			fprintf(stderr, "AFTER: %s\n", line);
 			/*TOKENS STAGE*/
-    		// if ((*msh)->tokens != NULL)
-			// {
-			// 	print_tokens((*msh)->tokens);
-			// 	free_tokens((*msh)->tokens);
-			// }
-			// (*msh)->tokens = tokenize(line);
-			// free_tokens((*msh)->tokens);
+			if (verify_quotes(line) > 0)
+			{
+				free (line);
+				free (*msh);
+				exit (1);
+			}
+			(*msh)->tokens = tokenize(line);
+            if ((*msh)->tokens != NULL)
+				print_tokens((*msh)->tokens);
 			/*PARSING*/
-            // msh->leaf = parse(msh->tokens);
-            // exec_ast(msh->leaf, msh);
+			if (verify_pipes((*msh)->tokens) > 0)
+			{
+				free(line);
+				free_tokens((*msh)->tokens);
+				free(*msh);
+				exit(1);
+			}
+            (*msh)->list = parse((*msh)->tokens, 0);
+            if ((*msh)->tokens != NULL)
+				free_tokens((*msh)->tokens);
+			if ((*msh)->list != NULL)
+				free_list(&((*msh)->list));
+			// exec_ast(msh->leaf, msh);
             // free_ast(&(msh->leaf));
         }
         free(line);
@@ -146,17 +152,19 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+	(void)env;
     msh = (t_minish *)malloc(sizeof(t_minish));
     if (!msh)
         return (1);
     msh->tokens = NULL;
     msh->leaf = NULL;
 	msh->env = NULL;
-	if (init_env(&(msh->env), env) < 0)
-		perror("Env initialization failed\n");
+	// if (init_env(&(msh->env), env) < 0)
+	// 	perror("Env initialization failed\n");
 	if (!isatty(STDIN_FILENO))
 		handle_oneline(&msh);
-    msh_loop(&msh);
+	else
+		msh_loop(&msh);
     free(msh);
     return (0);
 }

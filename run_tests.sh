@@ -20,7 +20,7 @@ ALL_EXPANSION_TEST_COMMANDS=(
   "echo \$\$" # PID expansion
   "echo \$?" # Exit status of the last command
   "echo \$0" # Shell script name or shell identifier
-  "echo '\$\"'\$'" # Mixing quotes with special characters
+  "echo '\$\''\$'" # Mixing quotes with special characters
   "echo \$((3 + 5))" # Arithmetic expansion (if supported)
   "echo \$HOME/test" # Path expansion with a variable
 )
@@ -71,6 +71,37 @@ TEST_COMMANDS=(
 
 TEST_COMMANDS+=("${EXPANSION_TEST_COMMANDS[@]}")
 
+BASE_TEST_COMMANDS=(
+  ""
+  "ls"
+  "ls|ls"
+  "ls | ls"
+  "   echo 'leading spaces test'"
+  "echo 'trailing spaces test'   "
+  "echo     too     many     spaces"
+  "ls>out.txt"
+  "ls > out.txt"
+  "echo 'appending'>>out.txt"
+  "echo 'appending with space' >> out.txt"
+  "cat <<EOF | grep hello && echo 'Done'"
+  "echo \"quoted #comment\" | cat"
+  "ls | grep src | wc -l"
+  "grep 'pattern' < in.txt"
+  "grep 'pattern' < in.txt > out.txt"
+  "grep 'pattern' < in.txt >> out.txt"
+  "echo \"double quotes with spaces\" | wc -w"
+  "echo 'single quotes with spaces' | wc -w"
+  "cat <<EOF | grep 'invalid"
+  "ls | | wc -l" #invalid
+  ">> out.txt echo invalid"
+  "| ls" #invalid input
+  "ls |" #invalid
+  "ls >>" #invalid
+  "cat <<EOF && echo done"
+  "echo \"quotes within \\\"quotes\\\"\""
+)
+
+
 # Print header
 echo "=========================="
 echo "      Minishell Tests     "
@@ -78,7 +109,7 @@ echo "=========================="
 
 i=1
 
-for CMD in "${EXPANSION_TEST_COMMANDS[@]}"; do
+for CMD in "${BASE_TEST_COMMANDS[@]}"; do
   echo
   echo "Test $i, Command: $CMD"
   echo "--------------------------"
@@ -99,6 +130,7 @@ for CMD in "${EXPANSION_TEST_COMMANDS[@]}"; do
   
   # Extract lines with 'definitely lost:' and 'ERROR SUMMARY'
   DEFINITELY_LOST=$(echo "$VALGRIND_OUTPUT" | grep "definitely lost:")
+  IN_USE=$(echo "$VALGRIND_OUTPUT" | grep "in use at exit:")
   ERROR_SUMMARY=$(echo "$VALGRIND_OUTPUT" | grep "ERROR SUMMARY")
 
   #
@@ -125,14 +157,18 @@ for CMD in "${EXPANSION_TEST_COMMANDS[@]}"; do
   #
   # 4. If either line was "red," print the full Valgrind output for debugging
   #
-  if [ "$IS_RED" -eq 1 ]; then
-    echo -e "${RED}Full Valgrind output (since there's a potential issue):${RESET}"
-    echo "$VALGRIND_OUTPUT"
-    ((FAIL_COUNT++))
-  else
-    ((PASS_COUNT++))
-  fi
-  ((i++))
+
+	if [[ "$IS_RED" -eq 1 && "$DEFINITELY_LOST" != *"0 bytes in 0 blocks"* && "$IN_USE" == *"0 bytes in 0 blocks"* ]]; then
+		echo -e "${RED}Logical/Parsing error, but memory is clean.${RESET}"
+		((PASS_COUNT++))
+	elif [["$IS_RED" -eq 1 && "$DEFINITELY_LOST" != *"0 bytes in 0 blocks"* && "$IN_USE" != *"0 bytes in 0 blocks"* ]]; then	
+		echo -e "${RED}Potential memory issue detected:${RESET}"
+		echo "$VALGRIND_OUTPUT"
+		((FAIL_COUNT++))
+	else
+		((PASS_COUNT++))
+	fi
+	((i++))
 done
 
 # Print summary

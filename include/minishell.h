@@ -51,6 +51,14 @@ typedef enum e_nodes
 	STRING
 }	t_node_type;
 
+typedef enum e_redir_type
+{
+	I_INPUT,
+	I_HEREDOC,
+	O_OVERWR,
+	O_APPENDF,
+}	t_redir_type;
+
 typedef enum e_err
 {
 	MALLOC,
@@ -69,8 +77,8 @@ typedef struct s_env
 */
 typedef struct s_redir
 {
-	t_node_type		type;
-	char			**args;
+	t_redir_type	type;
+	char			*str;
 	int				fd;
 	struct s_redir	*next;
 }	t_redir;
@@ -82,12 +90,15 @@ typedef struct s_redir
 */
 typedef struct s_cmd
 {
-	t_node_type		type;
+	// t_node_type		type;
 	char			**argv;
-	int				argc; //?
-	char			*full_path;
-	struct s_redir	inred;
-	struct s_redir	outred;
+	int				argc;
+	int				pipe[2];
+	// char			*full_path;
+	struct s_redir	*inred;
+	struct s_redir	*outred;
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
 }	t_cmd;
 
 typedef struct s_string
@@ -113,6 +124,7 @@ typedef struct s_minish
 {
 	t_string		*tokens;
 	struct s_ast	*leaf;
+	struct s_cmd	*list;
 	//char			**envv;
 	t_list			*env;
 }	t_minish;
@@ -126,6 +138,9 @@ char	*expand_line(char *line, t_minish *msh, int i);
  * @return 
  */
 t_string	*tokenize(char *line);
+int	verify_pipes(t_string *tokens);
+
+int	verify_quotes(char *line);
 
 
 /**
@@ -133,7 +148,7 @@ t_string	*tokenize(char *line);
  * 			For example, ./minishell ls || echo "fail"
  * @return head of the linked list with t_string * tokens
  */
-t_string	*tokenize_oneline(void);
+t_string	*tokenize_oneline(char *final_str);
 
 /**
  * @brief checks the token type ()
@@ -162,12 +177,25 @@ t_string	*split_logical(char **line, t_string *new);
  */
 void		free_tokens(t_string *tokens);
 // t_ast		*parse(t_string *tokens);
+void		free_list(t_cmd **list);
+// void   free_ast(t_ast **leaf)
 void		free_split(char **str);
 
 /**
 * @brief Printing path of current working directory
 * @return Return 0 if succes, -1 for error
 */
+
+/**
+ * @brief creates a linked list of cmds with outred and inred inside struct
+ * 
+ * @param tokens double-linked list of the tokens
+ * @return double-linked list of commands
+ */
+t_cmd	*parse(t_string *tokens, int i);
+t_redir	*create_inred_list(t_string *cmd_start);
+t_redir	*create_outred_list(t_string *cmd_start);
+
 int			printpwd(void);
 
 /**

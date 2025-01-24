@@ -76,24 +76,71 @@ char	*copy_token(char **line, char *str)
 	i = 0;
 	if (ft_isblank(**line))
 		skip_blanks(line);	
+	// printf("CHARs checked:\n");
 	while (*line && (*line)[i] && !ft_isblank((*line)[i])
-			&& (*line)[i] != '\'' && (*line)[i] != '"'
 			&& (*line)[i] != '|' && (*line)[i] !='(' 
 			&& (*line)[i] != '&' && (*line)[i] != ')'
 			&& (*line)[i] != '\0')
-		i++;
+		{
+			// printf("%c,", (*line)[i]);
+			if ((*line)[i] == '\'')
+			{
+				i++;
+				while ((*line)[i] != '\'')
+					i++;
+				i++;
+			}
+			else if ((*line)[i] == '"')
+			{
+				i++;
+				while ((*line)[i] != '"')
+					i++;
+				i++;
+			}
+			else
+			{
+				// printf("\nOTHER CHAR: %c\n", (*line)[i]);
+				i++;
+			}
+		}
 	str = malloc(i + 1);
 	if (str == NULL)
 		return (NULL);
 	i = 0;
 	while (*line && **line && !ft_isblank(**line)
-			&& (**line) != '\'' && (**line) != '"'
 			&& (**line) != '|' && (**line) !='(' 
 			&& (**line) != '&' && (**line) != ')'
 			&& (**line) != '\0')
 	{
-		str[i++] = **line;
-		(*line)++;
+		if (**line == '\'')
+		{
+            str[i++] = **line;
+            (*line)++;
+			while (**line != '\'')
+			{
+				str[i++] = **line;
+				(*line)++;
+			}
+			str[i++] = **line;
+			(*line)++;			
+		}
+		else if (**line == '"')
+		{
+            str[i++] = **line;
+            (*line)++;
+			while (**line != '"')
+			{
+				str[i++] = **line;
+				(*line)++;
+			}
+			str[i++] = **line;
+			(*line)++;
+		}
+		else
+		{
+			str[i++] = **line;
+			(*line)++;
+		}
 	}
 	str[i] = '\0';
 	return (str);
@@ -154,47 +201,39 @@ t_string	*create_outred_struct(char **line, t_string *new)
 {
 	if (*line && !ft_strncmp(*line, ">>", 2))
 	{
-		new->string = ft_strdup(">>\0");
+		*line = *line + 2;
+		new->string = copy_token(line, NULL);
 		new->type = OUT_REDIR_APPEND;
-		*line = *line + 2; 
 	}
 	else if (*line && **line && **line == '>')
 	{
-		new->string = ft_strdup(">\0");
-		new->type = OUT_REDIR;
 		*line = *line + 1;
+		new->string = copy_token(line, NULL);
+		new->type = OUT_REDIR;
 	}
 	else
 	{
+		new->type = COMMENT;
+		if (**line != '\'')
+			new->type = COMMENT_APPEND;
 		new->string = copy_token(line, NULL);
-		new->type = COMMENT_APPEND;
 	}
 	return (new);
 }
 
 t_string	*create_string_struct(char **line, t_string *new)
 {
-	if (*line && **line && **line == '\'')
+	if (*line && **line && !ft_strncmp(*line, "<<", 2))
 	{
-		new->string = copy_quote(line, '\'', NULL);
-		new->type = COMMENT; 
-	}
-	else if (*line && **line && **line == '"')
-	{
-		new->string = copy_quote(line, '"', NULL);
-		new->type = COMMENT_APPEND;
-	}
-	else if (*line && **line && !ft_strncmp(*line, "<<", 2))
-	{
-		new->string = ft_strdup("<<\0");
-		new->type = HERE_DOC;
 		*line = *line + 2;
+		new->string = copy_token(line, NULL);
+		new->type = HERE_DOC;
 	}
 	else if (*line && **line && **line == '<')
 	{
-		new->string = ft_strdup("<\0");
-		new->type = IN_REDIR;
 		*line = *line + 1;
+		new->string = copy_token(line, NULL);
+		new->type = IN_REDIR;
 	}
 	else
 		new = create_outred_struct(line, new);
