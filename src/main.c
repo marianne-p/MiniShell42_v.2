@@ -137,10 +137,11 @@ void    msh_loop(t_minish **msh)
             (*msh)->list = parse((*msh)->tokens, 0);
             if ((*msh)->tokens != NULL)
 				free_tokens((*msh)->tokens);
-			if ((*msh)->list != NULL)
-				free_list(&((*msh)->list));
+			execute_cmds(msh, (*msh)->list);
 			// exec_ast(msh->leaf, msh);
             // free_ast(&(msh->leaf));
+			if ((*msh)->list != NULL)
+				free_list(&((*msh)->list));
         }
         free(line);
     }
@@ -159,8 +160,8 @@ int main(int argc, char **argv, char **env)
     msh->tokens = NULL;
     msh->leaf = NULL;
 	msh->env = NULL;
-	// if (init_env(&(msh->env), env) < 0)
-	// 	perror("Env initialization failed\n");
+	if (init_env(&(msh->env), env) < 0)
+		perror("Env initialization failed\n");
 	if (!isatty(STDIN_FILENO))
 		handle_oneline(&msh);
 	else

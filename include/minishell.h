@@ -61,6 +61,10 @@ typedef enum e_redir_type
 
 typedef enum e_err
 {
+	PIPE_ERR,
+	FORK_ERR,
+	DUP2_ERR,
+	EXECVE_ERR,
 	MALLOC,
 	INPUT
 }	t_error;
@@ -94,6 +98,7 @@ typedef struct s_cmd
 	char			**argv;
 	int				argc;
 	int				pipe[2];
+	pid_t			pid;
 	// char			*full_path;
 	struct s_redir	*inred;
 	struct s_redir	*outred;
