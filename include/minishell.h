@@ -68,7 +68,8 @@ typedef enum e_err
 	WAIT_ERR,
 	CMD_NOT_FOUND,
 	MALLOC,
-	INPUT
+	INPUT,
+	ERROR
 }	t_error;
 
 typedef struct s_env
@@ -322,8 +323,8 @@ void		free_env(void *env);
 /**
  * 
  */
-void    single_cmd(t_cmd *list, t_minish *msh);
-int		execute_cmds(t_minish **msh, t_cmd *list);
-t_error	pipe_cmd(t_cmd *list, t_minish *msh);
+t_error		execute_cmds(t_minish **msh, t_cmd *list);
+t_error		single_cmd(t_list *list, t_minish *msh);
+t_error		pipe_cmd(t_cmd *list, t_minish *msh);
 
 #endif
