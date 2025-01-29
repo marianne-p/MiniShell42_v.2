@@ -87,7 +87,7 @@ t_error	pipe_cmd(t_cmd *list)
 int	execute_cmds(t_minish **msh, t_cmd *list)
 {
 	if (!list->next)
-		single_cmd();
+		single_cmd(list, *msh);
 	else
 		pipe_cmd(list);
 }
