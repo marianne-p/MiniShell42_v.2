@@ -65,6 +65,8 @@ typedef enum e_err
 	FORK_ERR,
 	DUP2_ERR,
 	EXECVE_ERR,
+	WAIT_ERR,
+	CMD_NOT_FOUND,
 	MALLOC,
 	INPUT
 }	t_error;
@@ -312,5 +314,16 @@ char		**split_path(t_list *lst, char *key, char c);
  * @param env t_env pointer
  */
 void		free_env(void *env);
+
+/**
+ * EXECUTION FUNCTIONS
+ */
+
+/**
+ * 
+ */
+void    single_cmd(t_cmd *list, t_minish *msh);
+int		execute_cmds(t_minish **msh, t_cmd *list);
+t_error	pipe_cmd(t_cmd *list, t_minish *msh);
 
 #endif
