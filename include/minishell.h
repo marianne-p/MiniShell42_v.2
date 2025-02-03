@@ -61,8 +61,15 @@ typedef enum e_redir_type
 
 typedef enum e_err
 {
+	PIPE_ERR,
+	FORK_ERR,
+	DUP2_ERR,
+	EXECVE_ERR,
+	WAIT_ERR,
+	CMD_NOT_FOUND,
 	MALLOC,
-	INPUT
+	INPUT,
+	ERROR
 }	t_error;
 
 typedef struct s_env
@@ -94,6 +101,7 @@ typedef struct s_cmd
 	char			**argv;
 	int				argc;
 	int				pipe[2];
+	pid_t			pid;
 	// char			*full_path;
 	struct s_redir	*inred;
 	struct s_redir	*outred;
@@ -307,5 +315,16 @@ char		**split_path(t_list *lst, char *key, char c);
  * @param env t_env pointer
  */
 void		free_env(void *env);
+
+/**
+ * EXECUTION FUNCTIONS
+ */
+
+/**
+ * 
+ */
+t_error		execute_cmds(t_minish **msh, t_cmd *list);
+t_error		single_cmd(t_list *list, t_minish *msh);
+t_error		pipe_cmd(t_cmd *list, t_minish *msh);
 
 #endif
