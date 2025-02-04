@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:05:11 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/02/04 13:26:00 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/02/04 17:38:08 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	read_line(int fd, char *delimiter, t_list *env, bool in_quotes)
 	char	*buffer;
 	char	*tmp;
 
-	buffer = readline(">");
+	buffer = readline("> ");
 	if (buffer == NULL)
 	{
 		return (0);

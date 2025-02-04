@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2025/02/04 12:42:50 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/02/04 15:43:44 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ t_string	*split_logical(char **line, t_string *new);
 //  *  
 //  */
  
-int		appends_to_file(int	input_fd, char *outputfilename);
+int		append_to_file(int input_fd, char *outputfilename);
 
 int		ft_heredoc(char *delimiter, t_list *env);
 
