@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:05:11 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/02/04 12:05:24 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/02/04 13:26:00 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ int	ft_heredoc(char *delimiter, t_list *env)
 	if (delimiter[0] == '\'' || delimiter[0] == '\"')
 		del_without_quotes = get_delimiter_without_quotes(delimiter,
 				&in_quotes);
-	if (fd < 0)
-		return (print_err(), -1);
 	while (exit_status != -1 && exit_status != 0)
 		exit_status = read_line(fd, del_without_quotes, env, in_quotes);
 	close(fd);

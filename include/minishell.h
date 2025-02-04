@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2025/02/04 12:13:02 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/02/04 12:42:50 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <string.h>
 # include "../ft_libft/headers/libft.h"
 
-# define HEREDOC_FILENAME_PATH "./heredoc_tmp.txt"
+# define HEREDOC_FILENAME_PATH "/tmp/heredoc_tmp.txt"
 
 // typedef enum e_signal_state
 // {
@@ -220,6 +220,8 @@ t_string	*split_logical(char **line, t_string *new);
 //  * 		and checks their validity
 //  *  
 //  */
+ 
+int		appends_to_file(int	input_fd, char *outputfilename);
 
 int		ft_heredoc(char *delimiter, t_list *env);
 

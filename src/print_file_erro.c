@@ -6,16 +6,22 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:13:48 by ogrativ           #+#    #+#             */
-/*   Updated: 2025/02/04 12:14:12 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/02/04 13:35:13 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+static void	print_err(char *text, int __errnum)
+{
+	perror(text);
+	strerror(__errnum);
+}
+
 void	print_file_error(void)
 {
 	if (errno == ENOENT)
-		perror("File does not exist\n");
+		print_err("Open failed: File does not exist", errno);
 	else if (errno == EEXIST)
 		perror("File already exists\n");
 	else if (errno == ENOTDIR)
@@ -28,6 +34,8 @@ void	print_file_error(void)
 		perror("Too many open files in the system\n");
 	else if (errno == ELOOP)
 		perror("Too many symbolic links encountered\n");
+	else if (errno == EACCES)
+		print_err("Open failed", errno);
 	else
-		perror(strerror(errno));
+		strerror(errno);
 }
