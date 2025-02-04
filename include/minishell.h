@@ -6,7 +6,7 @@
 /*   By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:14:31 by mpihur            #+#    #+#             */
-/*   Updated: 2025/01/24 17:30:21 by ogrativ          ###   ########.fr       */
+/*   Updated: 2025/02/04 12:13:02 by ogrativ          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@
 # include <string.h>
 # include "../ft_libft/headers/libft.h"
 
+# define HEREDOC_FILENAME_PATH "./heredoc_tmp.txt"
+
+// typedef enum e_signal_state
+// {
+// 	HEREDOC,
+// 	CMD,
+// 	NORMAL,
+// }	t_signal_state;
+
 typedef enum e_nodes
 {
 	ERROR,
@@ -53,10 +62,10 @@ typedef enum e_nodes
 
 typedef enum e_redir_type
 {
-	I_INPUT,
-	I_HEREDOC,
-	O_OVERWR,
-	O_APPENDF,
+	REDIR_INPUT,
+	REDIR_OUTPUT,
+	HEREDOC_INPUT,
+	HEREDOC_OUTPUT,
 }	t_redir_type;
 
 typedef enum e_err
@@ -68,8 +77,8 @@ typedef enum e_err
 	WAIT_ERR,
 	CMD_NOT_FOUND,
 	MALLOC,
-	INPUT,
-	ERROR
+	INPUT
+	// ERROR
 }	t_error;
 
 typedef struct s_env
@@ -137,6 +146,8 @@ typedef struct s_minish
 	t_list			*env;
 }	t_minish;
 
+//Global variable for handle signal state
+// extern t_signal_state	g_signal_state;
 
 char	*expand_line(char *line, t_minish *msh, int i);
 /*Tokenize*/
@@ -203,12 +214,16 @@ t_node_type find_token_type(char *token);
  */
 t_string	*split_logical(char **line, t_string *new);
 
-/**
- * @brief Creates a cmd_node inside t_string of type CMD,
- * 		which prerares command for execution: splits redir, cmd, args 
- * 		and checks their validity
- *  
- */
+// /**
+//  * @brief Creates a cmd_node inside t_string of type CMD,
+//  * 		which prerares command for execution: splits redir, cmd, args 
+//  * 		and checks their validity
+//  *  
+//  */
+
+int		ft_heredoc(char *delimiter, t_list *env);
+
+void	print_file_error(void);
 
 /**
  * Frees (char *)string AND linked list (t_string *)tokens
@@ -323,8 +338,8 @@ void		free_env(void *env);
 /**
  * 
  */
-t_error		execute_cmds(t_minish **msh, t_cmd *list);
-t_error		single_cmd(t_list *list, t_minish *msh);
-t_error		pipe_cmd(t_cmd *list, t_minish *msh);
+// t_error		execute_cmds(t_minish **msh, t_cmd *list);
+// t_error		single_cmd(t_list *list, t_minish *msh);
+// t_error		pipe_cmd(t_cmd *list, t_minish *msh);
 
 #endif
