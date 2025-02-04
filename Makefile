@@ -6,7 +6,7 @@
 #    By: ogrativ <ogrativ@student.42london.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 15:17:25 by mpihur            #+#    #+#              #
-#    Updated: 2025/01/24 17:23:10 by ogrativ          ###   ########.fr        #
+#    Updated: 2025/02/04 17:57:04 by ogrativ          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRC	:= main.c token.c bonus_parser.c token_split_logical.c \
 		expand_line.c parse.c parse_redir.c verify.c \
 		free.c extract_variable_utils.c append_variable_value.c \
 		get_env_value.c handle_escaping_variable.c proccess_quoted_text.c \
-		process_env.c try_ensure_buffer_capacity.c
+		process_env.c try_ensure_buffer_capacity.c append_to_file.c \
+		print_file_error.c ft_heredoc.c
 OBJ_DIR	:= obj
 CFLAGS	:= -Wall -Wextra -Werror -g -I./include
 LIBFT_DIR	:= ./ft_libft
